@@ -1,4 +1,4 @@
-package info.doula.security;
+package info.doula.security.controllers;
 
 import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;

@@ -24,5 +24,6 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'1.5.3.RELEASE'
     compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version:'2.0.11.RELEASE'
     compile group: 'org.springframework.security', name: 'spring-security-jwt', version:'1.0.5.RELEASE'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-zuul', version:'1.2.5.RELEASE'
     compile('org.projectlombok:lombok:1.16.6')
 }
