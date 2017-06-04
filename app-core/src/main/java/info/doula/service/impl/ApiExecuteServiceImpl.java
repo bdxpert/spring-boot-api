@@ -68,7 +68,8 @@ class ApiExecuteServiceImpl implements ApiExecuteService {
 		try {
 
 			//Check maintenance status
-			maintenanceChecker.checkApiMaintenanceStatus(dataMap.get("service").toString(), dataMap.get("operation").toString(), dataMap.get("version").toString());
+			maintenanceChecker.checkApiMaintenanceStatus(dataMap.get("service").toString(),
+					dataMap.get("operation").toString(), dataMap.get("version").toString());
 
 			// Call API execute logic
 			LinkedHashMap<String,?> result = apiExecuteLogic.executeService(servletRequest, dataMap);
@@ -126,7 +127,8 @@ class ApiExecuteServiceImpl implements ApiExecuteService {
 		try {
 
 			//Check maintenance status
-			maintenanceChecker.checkApiMaintenanceStatus(dataMap.get("service").toString(), dataMap.get("operation").toString());
+			maintenanceChecker.checkApiMaintenanceStatus(dataMap.get("service").toString(),
+					dataMap.get("operation").toString());
 
 			// Call API execute logic
 			LinkedHashMap<String,?> result = apiExecuteLogic.executeService(servletRequest, dataMap);
@@ -165,7 +167,8 @@ class ApiExecuteServiceImpl implements ApiExecuteService {
 		if (original == null)
 			return "";
 		else
-			return original.replaceAll("\r", "").replaceAll("\n", "").replaceAll("\t", "");
+			return original.replaceAll("\r", "").
+					replaceAll("\n", "").replaceAll("\t", "");
 	}
 
 	private void slowLog(String logMsg, long time) {
@@ -179,7 +182,8 @@ class ApiExecuteServiceImpl implements ApiExecuteService {
 	private void wrapExceptionThrow(long time, long accessTime, HttpServletRequest servletRequest,
 									Exception e, String exceptionType, String logMsg, String requestBody) {
 		time = System.currentTimeMillis() - accessTime;
-		logMsg = exceptionType + "	[" + servletRequest.getRequestURI() + "]	" + esc(e.getMessage()) + " " + requestBody+ " " + time;
+		logMsg = exceptionType + "	[" + servletRequest.getRequestURI() + "]	" +
+				esc(e.getMessage()) + " " + requestBody+ " " + time;
 		executeErrorLogger.error(logMsg);
 		errorLogger.error(e.getMessage(), e);
 		slowLog(logMsg, time);
