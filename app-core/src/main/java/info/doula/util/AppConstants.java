@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public interface AppConstants {
 
-    String BASE_NAME_SPACE = "com.rovers";
-    String SEC_NAME_SPACE = "com.rovers.security";
+    String BASE_NAME_SPACE = "info.doula";
+    String SEC_NAME_SPACE = BASE_NAME_SPACE + ".security";
 
     String SESSION_USER = "sessionUser";
     String SESSION_USER_ID = "sessionUserId";
@@ -26,10 +26,8 @@ public interface AppConstants {
     String APP_NAME = "RESTApp";
     String APPLICATION_NAME = "RESTFul WebApp";
     String SEPARATOR = "-";
-    String COMPANY_NAME = "FutureVault";
-    String ADDRESS = "Rd No. 10A, Dhaka, Bangladesh \n" +
-    "info@futurevaultinc.com \n" +
-    "Dhanmondi-10/A,Dhaka";
+    String COMPANY_NAME = "doula";
+    String ADDRESS = "Github";
     String SUCCESS_MESSAGE = "success";
     String FAILED_MESSAGE = "failed";
     String SB_KEY = "ibcs-primax";

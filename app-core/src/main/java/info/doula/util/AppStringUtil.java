@@ -3,7 +3,7 @@ package info.doula.util;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Created by bjit-15 on 12/23/16.
+ * Created by hossaindoula on 12/23/16.
  */
 public final class AppStringUtil extends StringUtils {
 

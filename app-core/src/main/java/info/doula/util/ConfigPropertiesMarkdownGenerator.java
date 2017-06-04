@@ -40,6 +40,8 @@ public class ConfigPropertiesMarkdownGenerator {
                     "Invalid meta-data: "
                             + ex.getMessage(),
                     Diagnostic.Kind.ERROR);
+        } catch (Exception ex){
+            throw new IOException("IOException occurred");
         } finally {
             in.close();
         }

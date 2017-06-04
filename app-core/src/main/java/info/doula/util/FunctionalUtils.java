@@ -6,7 +6,7 @@ import java.util.function.Function;
 /**
  * Utilities to overcome functional limitations.
  *
- * @author Ulises Bocchio
+ * @author hossaindoula
  */
 public class FunctionalUtils {
     public static <T, E extends Throwable> Consumer<T> unchecked(CheckedConsumer<T, E> consumer) {
