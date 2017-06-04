@@ -15,7 +15,8 @@
     },{
       "name" : "users",
       "type" : "list",
-      "required": false
+      "required": false,
+      "regex": null
     }
   ],
   "response"  : {
