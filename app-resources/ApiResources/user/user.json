@@ -1,0 +1,18 @@
+{
+  "request" : [
+    {
+      "name" : "username",
+      "type" : "string",
+      "minLength": 4,
+      "alphanumeric" : true,
+      "regex": null
+    },{
+      "name"  : "password",
+      "type"  : "encryptedCharacter",
+      "minLength" : 8
+    }
+  ],
+  "response"  : {
+    "fastForward" : true
+  }
+}
