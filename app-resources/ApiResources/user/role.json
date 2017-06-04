@@ -1,0 +1,18 @@
+{
+  "request" : [
+    {
+      "name" : "name",
+      "type" : "string",
+      "minLength": 4,
+      "alphanumeric" : true,
+      "regex": null
+    },{
+      "name"  : "description",
+      "type"  : "string",
+      "minLength" : 5
+    }
+  ],
+  "response"  : {
+    "fastForward" : true
+  }
+}
