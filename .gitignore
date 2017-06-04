@@ -3,3 +3,4 @@ gradle/
 gradlew
 gradlew.bat
 spring-boot-api.iml
+.gradle/

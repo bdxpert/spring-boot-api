@@ -2,6 +2,8 @@ include 'app-core',
         'app-api',
         'app-aas',
         'app-util',
+        'app-domain',
+        'app-manager',
         'app-resources',
         'app-ocr'
         
