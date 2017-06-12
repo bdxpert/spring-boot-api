@@ -35,9 +35,34 @@ public class NumberUtils {
     public static int toInt(Object number){
         try{
             return Integer.parseInt(number.toString());
-        } catch(NumberFormatException e) {
-        } catch(NullPointerException e) {
+        } catch(NumberFormatException | NullPointerException e) {
+            return 0;
         }
-        return 0;
+    }
+
+    public static long toLong(Object number){
+        try{
+            return Long.parseLong(number.toString());
+        } catch(NumberFormatException | NullPointerException e) {
+            return 0;
+        }
+    }
+
+    public static boolean compareGreaterThan(Object firstNumber, Object secondNumber){
+        if(isInteger(firstNumber.toString()) && isInteger(secondNumber.toString())){
+            return toInt(firstNumber) > toInt(secondNumber);
+        } else if(isLong(firstNumber.toString()) && isLong(secondNumber.toString())){
+            return toLong(firstNumber) > toLong(secondNumber);
+        }
+        return false;
+    }
+
+    public static boolean compareLessThan(Object firstNumber, Object secondNumber){
+        if(isInteger(firstNumber.toString()) && isInteger(secondNumber.toString())){
+            return toInt(firstNumber) < toInt(secondNumber);
+        } else if(isLong(firstNumber.toString()) && isLong(secondNumber.toString())){
+            return toLong(firstNumber) < toLong(secondNumber);
+        }
+        return false;
     }
 }

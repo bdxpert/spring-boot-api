@@ -1,20 +1,19 @@
 {
-  "request" : [
-    {
-      "name" : "username",
-      "type" : "string",
-      "minLength": 4,
-      "alphanumeric" : true,
-      "regex": null,
-      "required": true
-    },{
-      "name"  : "password",
-      "type"  : "encryptedCharacter",
-      "minLength" : 8,
-      "required": true
-    }
-  ],
-  "response"  : {
-    "fastForward" : true
+  "request": {
+    "parameters": [
+      {
+        "name": "username",
+        "type": "string",
+        "required": "true"
+      },
+      {
+        "name": "password",
+        "type": "string",
+        "required": "true"
+      }
+    ]
+  },
+  "response": {
+    "fastforward": true
   }
 }

@@ -1,10 +1,11 @@
 package info.doula.entity;
 
+
+/**
+ * author hossaindoula<hossaindoula@gmail.com>
+ */
 public class CacheEntry implements java.io.Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 7378773359803909527L;
 
 	private long time;

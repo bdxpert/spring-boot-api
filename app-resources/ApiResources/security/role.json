@@ -1,25 +1,19 @@
 {
-  "request" : [
-    {
-      "name" : "name",
-      "type" : "string",
-      "minLength": 4,
-      "alphanumeric" : true,
-      "regex": null,
-      "required": true
-    },{
-      "name"  : "description",
-      "type"  : "string",
-      "minLength" : 5,
-      "required"  : false
-    },{
-      "name" : "users",
-      "type" : "list",
-      "required": false,
-      "regex": null
-    }
-  ],
-  "response"  : {
-    "fastForward" : true
+  "request": {
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": "true"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": "true"
+      }
+    ]
+  },
+  "response": {
+    "fastforward": true
   }
 }
