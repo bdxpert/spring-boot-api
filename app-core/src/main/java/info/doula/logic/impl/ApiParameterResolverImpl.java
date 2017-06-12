@@ -54,22 +54,20 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
         }
 
         for(Object templateParameter : templateParameterMap){
-            resolveRequestRecursively(actualRequest, it, generatedMap, dataMap);
+            resolveRequestRecursively(actualRequest, (Map)templateParameter, generatedMap, dataMap);
         }
 
         return generatedMap;
 
     }
 
-
     /**
      * Reslove request checks actual httpRequest with requestTemplateMap as mentioned json file and prepare the request accordingly
      * @param requestMap
-     * @param jsonTemplateMap
-     * @param serviceName
-     * @param operationName
-     * @param versionNumber
-     * @return
+     * @param templateData
+     * @param generatedRequestMap
+     * @param dataMap
+     * @throws ParameterResolveException
      */
     private void resolveRequestRecursively(Map requestMap, Map templateData, Map generatedRequestMap, Map dataMap)
                                                                                 throws ParameterResolveException{
@@ -126,24 +124,24 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_DECIMAL:
-                def parameterValue = getParameterValue(templateData, source, requestMap)
+                parameterValue = getParameterValue(templateData, source, requestMap)
                 if(parameterValue != null) {
                     if(!parameterValue.toString().isBigDecimal()) {
                         throw new ParameterResolveException("${source} parameter should be decimal")
                     }
-                    doValidatePattern(parameterValue, templateData)
+                    doValidatePattern(parameterValue, templateData);
                     BigDecimal givenValue = parameterValue as BigDecimal
-                    def maxValue = templateData.get(MAX_VALUE) != null ? templateData.get(MAX_VALUE) as BigDecimal : null
-                    def minValue = templateData.get(MIN_VALUE) != null ? templateData.get(MIN_VALUE) as BigDecimal : null
-                    checkMaxMinValue(maxValue, minValue, source, givenValue)
-                    generatedRequestMap.put(key, givenValue)
+                    def maxValue = templateData.get(MAX_VALUE) != null ? templateData.get(MAX_VALUE) as BigDecimal : null;
+                    def minValue = templateData.get(MIN_VALUE) != null ? templateData.get(MIN_VALUE) as BigDecimal : null;
+                    checkMaxMinValue(maxValue, minValue, source, givenValue);
+                    generatedRequestMap.put(key, givenValue);
                 }
                 break;
 
             case TYPE_OPTION:
-                def parameterValue = getParameterValue(templateData, source, requestMap)
+                parameterValue = getParameterValue(templateData, source, requestMap)
                 if(parameterValue != null) {
-                    def values = templateData.get(OPTION)
+                    def values = templateData.get(OPTION);
                     if(!values) {
                         throw new ParameterResolveException("${source} options should not be null/blank");
                     }
@@ -155,12 +153,12 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_INT_OPTION:
-                def parameterValue = getParameterValue(templateData, source, requestMap);
+                parameterValue = getParameterValue(templateData, source, requestMap);
                 if(parameterValue != null) {
                     if(!isInteger(parameterValue)) {
                         throw new ParameterResolveException("${source} parameter should be integer");
                     }
-                    int givenValue = parameterValue as int
+                    int givenValue = parameterValue
                     def values = templateData.get(OPTION);
                     if(!values) {
                         throw new ParameterResolveException("${source} options should not be null/blank");
@@ -173,8 +171,8 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_STRING:
-                String parameterValue = getParameterValue(templateData, source, requestMap);
-                if(parameterValue) {
+                parameterValue = getParameterValue(templateData, source, requestMap);
+                if(parameterValue != null) {
                     doValidatePattern(parameterValue, templateData);
                     checkMaxMinStringLength(templateData, source, parameterValue);
                     generatedRequestMap.put(key, parameterValue);
@@ -187,7 +185,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_INT_ARRAY:
             case TYPE_INTEGER_ARRAY:
-                List parameterValues = getParameterValue(templateData, source, requestMap);
+                List parameterValues = (List)getParameterValue(templateData, source, requestMap);
 
                 if(parameterValues != null) {
                     List array = new ArrayList();
@@ -358,22 +356,22 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 // Source for the value of the parameter with type=clientid is X-ClientId header
             case TYPE_CLIENTID:
                 boolean isRequired = templateData.get(REQUIRED)?.toString()?.toLowerCase() == "true";
-                if(isRequired && (isNull(dataMap.clientId) || StringUtils.isBlank(dataMap.clientId as String))) {
-                    throw new ParameterResolveException("X-ClientId header is required")
+                if(isRequired && (isNull(dataMap.get("clientId")) || StringUtils.isBlank(dataMap.get("clientId").toString()))) {
+                    throw new ParameterResolveException("X-ClientId header is required");
                 }
-                generatedRequestMap.put(key, dataMap?.clientId);
+                generatedRequestMap.put(key, dataMap.get("clientId"));
                 break;
 
             case TYPE_SERVICE:
-                generatedRequestMap.put(key, dataMap?.service);
+                generatedRequestMap.put(key, dataMap.get("service"));
                 break;
 
             case TYPE_OPERATION:
-                generatedRequestMap.put(key, dataMap?.operation);
+                generatedRequestMap.put(key, dataMap.get("operation"));
                 break;
 
             case TYPE_VERSION:
-                generatedRequestMap.put(key, dataMap?.version);
+                generatedRequestMap.put(key, dataMap.get("version"));
                 break;
 
             default:
