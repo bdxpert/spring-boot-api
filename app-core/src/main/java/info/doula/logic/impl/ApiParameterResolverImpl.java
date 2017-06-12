@@ -30,7 +30,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * @see JsonAtrributes class for json attributes
      *
      * @param dataMap
-     * @param requestTemplateMap
+     * @param jsonTemplateMap
      * @return
      */
     @Override
@@ -45,12 +45,13 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
             return actualRequest;
         }
 
-        Map generatedMap = new HashMap();
+        LinkedHashMap generatedMap = new LinkedHashMap();
         List templateParameterMap = requestTemplateMap.get(PARAMETERS) != null ?
                 (ArrayList)requestTemplateMap.get(PARAMETERS) : Collections.emptyList();
 
         if(!(templateParameterMap instanceof List)) {
-            throw new ParameterResolveException("invalid request parameters in json configuration file. request parameters should be list");
+            throw new ParameterResolveException("invalid request parameters in json configuration file. " +
+                    "request parameters should be list");
         }
 
         for(Object templateParameter : templateParameterMap){
@@ -69,12 +70,12 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * @param dataMap
      * @throws ParameterResolveException
      */
-    private void resolveRequestRecursively(Map requestMap, Map templateData, Map generatedRequestMap, Map dataMap)
-                                                                                throws ParameterResolveException{
+    private void resolveRequestRecursively(Map requestMap, Map templateData,
+                                           Map generatedRequestMap, Map dataMap) throws ParameterResolveException {
 
         String key = templateData.get(NAME).toString();
         String type = templateData.get(TYPE).toString();
-        String source = templateData.get(SOURCE) != null ? "": key;
+        String source = templateData.get(SOURCE) != null ? templateData.get(SOURCE).toString() : key;
 
         switch(type) {
 
@@ -93,12 +94,12 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_INT:
             case TYPE_INTEGER:
-                parameterValue = getParameterValue(templateData, source, requestMap);
-                if(parameterValue != null) {
-                    if(!isInteger(parameterValue)) {
+                Object integerValue = getParameterValue(templateData, source, requestMap);
+                if(integerValue != null) {
+                    if(!isInteger(integerValue)) {
                         throw new ParameterResolveException(source + " parameter should be integer");
                     }
-                    int givenValue = Integer.parseInt(parameterValue.toString());
+                    int givenValue = toInt(integerValue.toString());
                     Integer maxValue = templateData.get(MAX_VALUE) != null ?
                             Integer.parseInt(templateData.get(MAX_VALUE).toString())  : null;
                     Integer minValue = templateData.get(MIN_VALUE) != null ?
@@ -110,43 +111,43 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_LONG:
-                parameterValue = getParameterValue(templateData, source, requestMap);
-                if(parameterValue != null) {
-                    if(!isLong(parameterValue)) {
-                        throw new ParameterResolveException("${source} parameter should be long");
+                Object longValue = getParameterValue(templateData, source, requestMap);
+                if(longValue != null) {
+                    if(!isLong(longValue)) {
+                        throw new ParameterResolveException(source + " parameter should be long");
                     }
-                    long givenValue = Long.parseLong(parameterValue.toString());
-                    Long maxValue = templateData.get(MAX_VALUE) != null ? Long.parseLong(templateData.get(MAX_VALUE).toString()) : null;
-                    Long minValue = templateData.get(MIN_VALUE) != null ? Long.parseLong(templateData.get(MIN_VALUE).toString()) : null;
+                    long givenValue = toLong(longValue.toString());
+                    Long maxValue = templateData.get(MAX_VALUE) != null ? toLong(templateData.get(MAX_VALUE).toString()) : null;
+                    Long minValue = templateData.get(MIN_VALUE) != null ? toLong(templateData.get(MIN_VALUE).toString()) : null;
                     checkMaxMinValue(maxValue, minValue, source, givenValue);
-                    generatedRequestMap.put(key, givenValue)
+                    generatedRequestMap.put(key, givenValue);
                 }
                 break;
 
             case TYPE_DECIMAL:
-                parameterValue = getParameterValue(templateData, source, requestMap)
+                parameterValue = getParameterValue(templateData, source, requestMap);
                 if(parameterValue != null) {
-                    if(!parameterValue.toString().isBigDecimal()) {
-                        throw new ParameterResolveException("${source} parameter should be decimal")
+                    if(!isBigDecimal(parameterValue.toString())) {
+                        throw new ParameterResolveException(source + " parameter should be decimal");
                     }
                     doValidatePattern(parameterValue, templateData);
-                    BigDecimal givenValue = parameterValue as BigDecimal
-                    def maxValue = templateData.get(MAX_VALUE) != null ? templateData.get(MAX_VALUE) as BigDecimal : null;
-                    def minValue = templateData.get(MIN_VALUE) != null ? templateData.get(MIN_VALUE) as BigDecimal : null;
+                    BigDecimal givenValue = new BigDecimal(parameterValue.toString());
+                    BigDecimal maxValue = templateData.get(MAX_VALUE) != null ? new BigDecimal(templateData.get(MAX_VALUE).toString()) : null;
+                    BigDecimal minValue = templateData.get(MIN_VALUE) != null ? new BigDecimal(templateData.get(MIN_VALUE).toString()) : null;
                     checkMaxMinValue(maxValue, minValue, source, givenValue);
                     generatedRequestMap.put(key, givenValue);
                 }
                 break;
 
             case TYPE_OPTION:
-                parameterValue = getParameterValue(templateData, source, requestMap)
+                parameterValue = getParameterValue(templateData, source, requestMap);
                 if(parameterValue != null) {
                     def values = templateData.get(OPTION);
-                    if(!values) {
-                        throw new ParameterResolveException("${source} options should not be null/blank");
+                    if(values != null) {
+                        throw new ParameterResolveException(source + " options should not be null/blank");
                     }
                     if(!values.any { it == parameterValue}) {
-                        throw new ParameterResolveException("set ${source} from ${values.join(',')}");
+                        throw new ParameterResolveException("set " + source + " from " + values.join(','));
                     }
                     generatedRequestMap.put(key, parameterValue);
                 }
@@ -156,15 +157,15 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 parameterValue = getParameterValue(templateData, source, requestMap);
                 if(parameterValue != null) {
                     if(!isInteger(parameterValue)) {
-                        throw new ParameterResolveException("${source} parameter should be integer");
+                        throw new ParameterResolveException(source + " parameter should be integer");
                     }
-                    int givenValue = parameterValue
+                    int givenValue = toInt(parameterValue.toString());
                     def values = templateData.get(OPTION);
-                    if(!values) {
-                        throw new ParameterResolveException("${source} options should not be null/blank");
+                    if(values != null) {
+                        throw new ParameterResolveException(source + " options should not be null/blank");
                     }
                     if(!values.any { it == givenValue}) {
-                        throw new ParameterResolveException("set ${source} from ${values.join(',')}");
+                        throw new ParameterResolveException("set "+ source + " from ${values.join(',')}");
                     }
                     generatedRequestMap.put(key, givenValue);
                 }
@@ -200,23 +201,23 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     if(templateData.get(MAX_SIZE) != null) {
                         int maxSize = templateData.get(MAX_SIZE) as int
                         if(array.size() > maxSize) {
-                            throw new ParameterResolveException("${source} array size must be under ${maxSize}")
+                            throw new ParameterResolveException(source + " array size must be under " + maxSize);
                         }
                     }
 
                     array.each {
                         if(!isInteger(it)) {
-                            throw new ParameterResolveException("${source} parameter should be numbers")
+                            throw new ParameterResolveException(source + " parameter should be numbers");
                         }
                         int parameterValue = it as int
                         def maxValue = templateData.get(MAX_VALUE)
                         def minValue = templateData.get(MIN_VALUE)
 
                         if(maxValue && isNotUnderMaxValue(parameterValue, maxValue as int)) {
-                            throw new ParameterResolveException("all ${source}'s must be under ${maxValue}")
+                            throw new ParameterResolveException("all " + source + "'s must be under " + maxValue);
                         }
                         if(minValue && isNotOverMinValue(parameterValue, minValue as int)) {
-                            throw new ParameterResolveException("all ${source}'s must be over ${minValue}")
+                            throw new ParameterResolveException("all " + source + "'s must be over " + minValue);
                         }
                         valuesArray += parameterValue
                     }
@@ -237,33 +238,33 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     if(templateData.get(MAX_SIZE) != null) {
                         int maxSize = templateData.get(MAX_SIZE) as int
                         if(array.size() > maxSize) {
-                            throw new ParameterResolveException("${source} array size must be under ${maxSize}")
+                            throw new ParameterResolveException(source + " array size must be under " + maxSize);
                         }
                     }
 
                     def valuesArray = []
                     array.each {
                         if(!isLong(it)) {
-                            throw new ParameterResolveException("${source} parameter should be numbers")
+                            throw new ParameterResolveException(source + " parameter should be numbers");
                         }
                         long parameterValue = it as long
                         def maxValue = templateData.get(MAX_VALUE)
                         def minValue = templateData.get(MIN_VALUE)
 
                         if(maxValue && isNotUnderMaxValue(parameterValue, maxValue as long)) {
-                            throw new ParameterResolveException("all ${source}'s must be under ${maxValue}")
+                            throw new ParameterResolveException("all " + source + "'s must be under " + maxValue);
                         }
                         if(minValue && isNotOverMinValue(parameterValue, minValue as long)) {
-                            throw new ParameterResolveException("all ${source}'s must be over ${minValue}")
+                            throw new ParameterResolveException("all " + source + "'s must be over " + maxValue);
                         }
                         valuesArray += parameterValue
                     }
-                    generatedRequestMap.put(key, valuesArray)
+                    generatedRequestMap.put(key, valuesArray);
                 }
-                break
+                break;
 
             case TYPE_STRING_ARRAY:
-                def parameterValues = getParameterValue(templateData, source, requestMap)
+                def parameterValues = getParameterValue(templateData, source, requestMap);
 
                 if(parameterValues != null) {
 
@@ -347,15 +348,15 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                             templateData.get(PARAMETERS)?.each { objectTemplateElement ->
                                     resolveRequestRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse)
                             }
-                            array += generatedObjectResponse
+                            array += generatedObjectResponse;
                         }
                     }
-                    generatedRequestMap.put(key, array)
+                    generatedRequestMap.put(key, array);
                 }
 
                 // Source for the value of the parameter with type=clientid is X-ClientId header
             case TYPE_CLIENTID:
-                boolean isRequired = templateData.get(REQUIRED)?.toString()?.toLowerCase() == "true";
+                boolean isRequired = templateData.get(REQUIRED).toString().toLowerCase().equals("true");
                 if(isRequired && (isNull(dataMap.get("clientId")) || StringUtils.isBlank(dataMap.get("clientId").toString()))) {
                     throw new ParameterResolveException("X-ClientId header is required");
                 }
@@ -377,16 +378,14 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
             default:
                 throw new ParameterResolveException("${source} unknown type ${type}");
         }
-
     }
-
 
     /**
      * Fetch parameterValue from the actual request,
      * if the value is not exist in actual request then it checks whether that filed is required for not,
      * if field is required then throws exception, if filed is not required & default present in json file then it will return default value
-     * @param parameterData
-     * @param key
+     * @param templateData
+     * @param datasource
      * @param requestMap
      * @return parameterValue
      */
@@ -397,7 +396,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
         boolean isRequired = templateData.get(REQUIRED).toString().toLowerCase().equals("true");
         if(isRequired) {
             if(isNull(parameterValue) || StringUtils.isBlank(parameterValue.toString())) {
-                throw new ParameterResolveException("${datasource} parameter should not be null/blank");
+                throw new ParameterResolveException(datasource + " parameter should not be null/blank");
             }
         } else {
             if(isNull(parameterValue) || StringUtils.isBlank(parameterValue.toString())) {
@@ -448,7 +447,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * @param maxValue
      * @return true if the givenValue is over the maxValue
      */
-    private boolean isNotUnderMaxValue(Number givenValue, Number maxValue) {
+    private boolean isNotUnderMaxValue(Object givenValue, Object maxValue) {
         return compareGreaterThan(givenValue, maxValue);
     }
 
@@ -492,20 +491,19 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
         Object maxLength = templateData.get(MAX_LENGTH);
         Object minLength = templateData.get(MIN_LENGTH);
         if(maxLength != null && givenValue.length() > (toInt(maxLength))) {
-            throw new ParameterResolveException("${key} length must be under ${maxLength}");
+            throw new ParameterResolveException(key + " length must be under "+ maxLength);
         }
         if(minLength != null && givenValue.length() < (toInt(minLength) )) {
-            throw new ParameterResolveException("${key} length must be over ${minLength}");
+            throw new ParameterResolveException(key + " length must be over " + minLength);
         }
     }
 
     /**
      * This will check pattern only pattern attibute exists in json file for corresponding field
      * @param origin
-     * @param targetNode
+     * @param templateData
      */
-    private void doValidatePattern(Object origin, Map templateData) throws ParameterResolveException{
-
+    private void doValidatePattern(Object origin, Map templateData) throws ParameterResolveException {
         String pattern = templateData.get(PATTERN);
         if (pattern != null && origin !=null && !origin.toString().isEmpty()) {
             if (!((origin.toString()) ==~ pattern)) {
@@ -518,8 +516,8 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
     /**
      * Resolve response parameters recursively
      * checks actual response with templateParameterMap as mentioned json file and prepare the response accordingly
-     * @param actualDataMap
-     * @param templateParameterMap
+     * @param response
+     * @param jsonTemplateMap
      * @return generatedMap
      */
     public LinkedHashMap<String, ?> resolveResponseParameter(Map<String, Object> response,
@@ -552,8 +550,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * Resolve response parameters recursively
      * checks actual response with templateParameterMap as mentioned json file and prepare the response accordingly
      * @param actualDataMap
-     * @param templateParameterMap
+     * @param templateData
      * @param generatedMap
+     * @throws ParameterResolveException
      */
     private void resolveResponseRecursively(Map actualDataMap, Map templateData, Map generatedMap)
                                             throws ParameterResolveException {
@@ -565,15 +564,14 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
         Object parameterValue =  actualDataMap.get(source);
 
         switch(type) {
-
             case TYPE_BOOLEAN:
-                boolean convertedValue =  false
-                if(parameterValue?.toString().toLowerCase() == "true") {
-                convertedValue = true
-            } else if (parameterValue?.toString().isNumber() && parameterValue.toString().toInteger() > 0) {
-                convertedValue = true
-            }
-            generatedMap.put(key, convertedValue)
+                boolean convertedValue =  false;
+                if(parameterValue.toString().toLowerCase().equals("true")) {
+                    convertedValue = true;
+                } else if (isNumber(parameterValue.toString()) && toInt(parameterValue.toString()) > 0) {
+                    convertedValue = true;
+                }
+            generatedMap.put(key, convertedValue);
             break;
 
             case TYPE_INT:
@@ -589,51 +587,53 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_LONG:
-                value = 0;
+                long longValue = 0;
                 if(parameterValue != null) {
                     if(!isLong(parameterValue)) {
                         throw new ParameterResolveException(source + " parameter should be long");
                     }
-                    value = toLong(parameterValue);
+                    longValue = toLong(parameterValue);
                 }
-                generatedMap.put(key, value);
+
+                generatedMap.put(key, longValue);
                 break;
 
             case TYPE_DECIMAL:
-                BigDecimal value = new BigDecimal(0.0);
-                if(parameterValue) {
-                    if(!parameterValue.toString().isBigDecimal()) {
+                BigDecimal bigDecimalValue = new BigDecimal(0.0);
+                if(parameterValue != null) {
+                    if(!isBigDecimal(parameterValue.toString())) {
                         throw new ParameterResolveException(source + " parameter should be decimal");
                     }
-                    value = parameterValue as BigDecimal
+                    bigDecimalValue = new BigDecimal(parameterValue.toString());
                 }
-                generatedMap.put(key, value)
+
+                generatedMap.put(key, bigDecimalValue);
                 break;
 
             case TYPE_OPTION:
                 if(parameterValue != null) {
-                    def values = templateData.get(OPTION)
-                    if(!values) {
-                        throw new ParameterResolveException("${source} options should not be null/blank")
+                    Object values = templateData.get(OPTION);
+                    if(values == null) {
+                        throw new ParameterResolveException("${source} options should not be null/blank");
                     }
                     if(!values.any { it == parameterValue}) {
-                        throw new ParameterResolveException("set ${source} from ${values.join(',')}")
+                        throw new ParameterResolveException("set ${source} from ${values.join(',')}");
                     }
                 }
-                generatedMap.put(key, parameterValue)
-                break
+                generatedMap.put(key, parameterValue);
+                break;
 
             case TYPE_STRING:
-                generatedMap.put(key, parameterValue as String)
-                break
+                generatedMap.put(key, parameterValue.toString());
+                break;
 
             case TYPE_FIXED:
-                generatedMap.put(key, templateData.get(VALUE))
-                break
+                generatedMap.put(key, templateData.get(VALUE));
+                break;
 
             case TYPE_INT_ARRAY:
             case TYPE_INTEGER_ARRAY:
-                def array = []
+                List array = new ArrayList();
                 if(parameterValue != null) {
                     if(parameterValue instanceof List) {
                         parameterValue.each {
@@ -646,53 +646,53 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         if(!isInteger(parameterValue)) {
                             throw new ParameterResolveException("${source} parameter should be numbers")
                         }
-                        array += parameterValue as int
+                        array.add(toInt(parameterValue.toString()));
                     }
                 }
-                generatedMap.put(key, array)
-                break
+                generatedMap.put(key, array);
+                break;
 
             case TYPE_LONG_ARRAY:
-                def array = []
+                List array = new ArrayList();
                 if(parameterValue != null) {
                     if(parameterValue instanceof List) {
                         parameterValue.each {
                             if(!isLong(it)) {
-                                throw new ParameterResolveException("${source} parameter should be numbers")
+                                throw new ParameterResolveException("${source} parameter should be numbers");
                             }
                             array += it as long
                         }
                     } else {
                         if(!isLong(parameterValue)) {
-                            throw new ParameterResolveException("${source} parameter should be numbers")
+                            throw new ParameterResolveException("${source} parameter should be numbers");
                         }
-                        array += parameterValue as long
+                        array.add(toLong(parameterValue.toString()));
                     }
                 }
-                generatedMap.put(key, array)
-                break
+                generatedMap.put(key, array);
+                break;
 
             case TYPE_STRING_ARRAY:
-                def array = []
+                List array = new ArrayList();
                 if(parameterValue != null) {
                     if(parameterValue instanceof List) {
                         parameterValue.each {
                             array += it as String
                         }
                     } else {
-                        array += parameterValue as String
+                        array.add(parameterValue.toString());
                     }
                 }
-                generatedMap.put(key, array)
-                break
+                generatedMap.put(key, array);
+                break;
 
             case TYPE_OBJECT:
-                def generatedObjectResponse = [:]
+                Map generatedObjectResponse = new HashMap();
                 templateData.get(PARAMETERS)?.each {
-                resolveResponseRecursively(parameterValue, it, generatedObjectResponse)
+                resolveResponseRecursively(parameterValue, it, generatedObjectResponse);
             }
-            generatedMap.put(key, generatedObjectResponse)
-            break
+            generatedMap.put(key, generatedObjectResponse);
+            break;
 
             case TYPE_OBJECT_ARRAY:
                 def array = []
@@ -707,9 +707,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                             templateData.get(PARAMETERS)?.each { objectTemplateElement ->
                                     resolveResponseRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse)
                             }
-                            def childResponse = [:]
-                            childResponse[childName] = generatedObjectResponse
-                            array += childResponse
+                            Map childResponse = new HashMap();
+                            childResponse.put(childName, generatedObjectResponse) ;
+                            array += childResponse;
                         }
                     } else {
                         parameterValue?.each { objectDataMap ->
@@ -725,7 +725,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             default:
-                throw new ParameterResolveException("${source} unknown type ${type}");
+                throw new ParameterResolveException(source + " unknown type " + type);
         }
 
     }

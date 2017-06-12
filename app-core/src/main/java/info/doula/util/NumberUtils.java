@@ -1,5 +1,7 @@
 package info.doula.util;
 
+import java.math.BigDecimal;
+
 /**
  * Created by tasnim on 6/11/2017.
  */
@@ -64,5 +66,13 @@ public class NumberUtils {
             return toLong(firstNumber) < toLong(secondNumber);
         }
         return false;
+    }
+
+    public static boolean isNumber(String number){
+        return org.apache.commons.lang3.math.NumberUtils.isNumber(number);
+    }
+
+    public static boolean isBigDecimal(String number){
+        return org.apache.commons.lang3.math.NumberUtils.createBigDecimal(number) instanceof BigDecimal;
     }
 }
