@@ -10,6 +10,8 @@ import info.doula.exception.ServiceConditionException;
 import info.doula.exception.SystemException;
 import info.doula.logic.ApiExecuteLogic;
 import info.doula.logic.ApiReflectionLogic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ApiExecuteLogicImpl implements ApiExecuteLogic, BeanFactoryAware {
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private BeanFactory beanFactory;
 
@@ -68,5 +72,26 @@ public class ApiExecuteLogicImpl implements ApiExecuteLogic, BeanFactoryAware {
 
 		// Call reflection logic to invoke the main action class of module
 		return (LinkedHashMap<String, ?>)apiReflectionLogic.execute(servletRequest, dataMap, logicObject);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public LinkedHashMap<String, ?> executeFilter(HttpServletRequest servletRequest, Map<String, Object> dataMap)
+			throws BadRequestException, NotFoundException, SystemException, ServiceConditionException {
+		// Call API execute logic
+		Object logicObject;
+
+		try {
+			logicObject = beanFactory.getBean(dataMap.get("service").toString());
+			if(logicObject == null) {
+				throw new SystemException(servletRequest.getRequestURI() + " response filter does not exist");
+			}
+		} catch(Exception ex) {
+			logger.info("Problem in getting passThrough filter logicObject of ${servletRequest.getRequestURI()} : " + ex);
+			throw new SystemException(servletRequest.getRequestURI() + " response filter does not exist");
+		}
+
+		// Call reflection logic to invoke the main action class of module
+		return (LinkedHashMap<String, ?>) apiReflectionLogic.execute(servletRequest, dataMap, logicObject);
 	}
 }

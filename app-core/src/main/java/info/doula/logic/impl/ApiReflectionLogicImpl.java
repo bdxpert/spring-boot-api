@@ -1,7 +1,6 @@
 package info.doula.logic.impl;
 
 
-import com.rovers.annotation.*;
 import info.doula.exception.BadRequestException;
 import info.doula.exception.NotFoundException;
 import info.doula.exception.ServiceConditionException;
@@ -70,7 +69,7 @@ public class ApiReflectionLogicImpl implements ApiReflectionLogic {
 
 				if (methodAnnotation != null
 				&& methodAnnotation.value().equals(methodName)) {
-					List<Object> invokeParameter = new ArrayList<Object>();
+					List<Object> invokeParameter = new ArrayList<>();
 
 					Annotation[][] parameterAnnotations = method
 							.getParameterAnnotations();

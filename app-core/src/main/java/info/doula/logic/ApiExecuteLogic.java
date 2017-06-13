@@ -20,16 +20,31 @@ import javax.servlet.http.HttpServletRequest;
 public interface ApiExecuteLogic {
 
 	/**
-	 * Provides business logic object and execute for the given request 
-	 * 
+	 * Provides business logic object and execute for the given request
+	 *
 	 * @param servletRequest - http servlet request
 	 * @param dataMap - contains serviceName, operationName, versionNumber, requestMap
-	 * @return response 
+	 * @return response
 	 * @throws BadRequestException
 	 * @throws NotFoundException
 	 * @throws SystemException
 	 * @throws ServiceConditionException
 	 */
-	LinkedHashMap<String, ?> executeService(HttpServletRequest servletRequest, Map<String, Object> dataMap) throws BadRequestException, NotFoundException, SystemException, ServiceConditionException;
+	LinkedHashMap<String, ?> executeService(HttpServletRequest servletRequest, Map<String, Object> dataMap)
+			throws BadRequestException, NotFoundException, SystemException, ServiceConditionException;
+
+	/**
+	 * Provides business logic object and execute passThrough post filter
+	 *
+	 * @param servletRequest - http servlet request
+	 * @param dataMap - contains serviceName, operationName, versionNumber, requestMap
+	 * @return response
+	 * @throws BadRequestException
+	 * @throws NotFoundException
+	 * @throws SystemException
+	 * @throws ServiceConditionException
+	 */
+	LinkedHashMap<String, ?> executeFilter(HttpServletRequest servletRequest, Map<String, Object> dataMap)
+			throws BadRequestException, NotFoundException, SystemException, ServiceConditionException;
 
 }

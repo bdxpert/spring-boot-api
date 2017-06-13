@@ -26,7 +26,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * If requestTemplateMap has fastforward is true then, it will return actual httpRequest
      * It checks actual httpRequest with requestTemplateMap as mentioned json file and prepare the request accordingly
      *
-     * @see JsonAtrributes class for json attributes
+     * @see info.doula.entity.JsonAttributes class for json attributes
      *
      * @param dataMap
      * @param jsonTemplateMap
@@ -79,13 +79,13 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
         switch(type) {
 
             case TYPE_BOOLEAN:
-                Object parameterValue = getParameterValue(templateData, source, requestMap);
-                if(parameterValue != null) {
+                Object booleanValue = getParameterValue(templateData, source, requestMap);
+                if(booleanValue != null) {
                     boolean value = false;
-                    if(parameterValue.toString().toLowerCase().equals("true")) {
+                    if(booleanValue.toString().toLowerCase().equals("true")) {
                         value = true;
-                    } else if (isInteger(parameterValue)) {
-                        value = Integer.parseInt(parameterValue.toString()) > 0;
+                    } else if (isInteger(booleanValue)) {
+                        value = Integer.parseInt(booleanValue.toString()) > 0;
                     }
                     generatedRequestMap.put(key, value);
                 }
@@ -124,13 +124,13 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_DECIMAL:
-                parameterValue = getParameterValue(templateData, source, requestMap);
-                if(parameterValue != null) {
-                    if(!isBigDecimal(parameterValue.toString())) {
+                Object decimalValue = getParameterValue(templateData, source, requestMap);
+                if(decimalValue != null) {
+                    if(!isBigDecimal(decimalValue.toString())) {
                         throw new ParameterResolveException(source + " parameter should be decimal");
                     }
-                    doValidatePattern(parameterValue, templateData);
-                    BigDecimal givenValue = new BigDecimal(parameterValue.toString());
+                    doValidatePattern(decimalValue, templateData);
+                    BigDecimal givenValue = new BigDecimal(decimalValue.toString());
                     BigDecimal maxValue = templateData.get(MAX_VALUE) != null ? new BigDecimal(templateData.get(MAX_VALUE).toString()) : null;
                     BigDecimal minValue = templateData.get(MIN_VALUE) != null ? new BigDecimal(templateData.get(MIN_VALUE).toString()) : null;
                     checkMaxMinValue(maxValue, minValue, source, givenValue);
@@ -139,16 +139,16 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_OPTION:
-                parameterValue = getParameterValue(templateData, source, requestMap);
-                if(parameterValue != null) {
-                    def values = templateData.get(OPTION);
+                Object optionValue = getParameterValue(templateData, source, requestMap);
+                if(optionValue != null) {
+                    Object values = templateData.get(OPTION);
                     if(values != null) {
                         throw new ParameterResolveException(source + " options should not be null/blank");
                     }
                     if(!values.any { it == parameterValue}) {
                         throw new ParameterResolveException("set " + source + " from " + values.join(','));
                     }
-                    generatedRequestMap.put(key, parameterValue);
+                    generatedRequestMap.put(key, optionValue);
                 }
                 break;
 

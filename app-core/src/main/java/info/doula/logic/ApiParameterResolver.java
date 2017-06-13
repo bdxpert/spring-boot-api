@@ -20,7 +20,7 @@ public interface ApiParameterResolver {
 	 * If requestTemplateMap has fastforward is true then, it will return actual httpRequest
 	 * It checks actual httpRequest with requestTemplateMap as mentioned json file and prepare the request accordingly
 	 *
-	 * @see JsonAtrributes class for json attributes
+	 * @see info.doula.entity.JsonAttributes class for json attributes
 	 *
 	 * @param dataMap
 	 * @param requestTemplateMap
@@ -36,7 +36,7 @@ public interface ApiParameterResolver {
 	 * If requestTemplateMap has fastforward is true then, it will return actual httpRequest
 	 * It checks actual httpRequest with requestTemplateMap as mentioned json file and prepare the request accordingly
 	 *
-	 * @see JsonAtrributes class for json attributes
+	 * @see info.doula.entity.JsonAttributes class for json attributes
 	 *
 	 * @param actualResponse
 	 * @param responseTemplateMap
