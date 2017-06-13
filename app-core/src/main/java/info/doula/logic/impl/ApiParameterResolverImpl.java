@@ -172,11 +172,11 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_STRING:
-                parameterValue = getParameterValue(templateData, source, requestMap);
-                if(parameterValue != null) {
-                    doValidatePattern(parameterValue, templateData);
-                    checkMaxMinStringLength(templateData, source, parameterValue);
-                    generatedRequestMap.put(key, parameterValue);
+                String stringValue = getParameterValue(templateData, source, requestMap).toString();
+                if(stringValue != null) {
+                    doValidatePattern(stringValue, templateData);
+                    checkMaxMinStringLength(templateData, source, stringValue);
+                    generatedRequestMap.put(key, stringValue);
                 }
                 break;
 
@@ -702,9 +702,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
             case TYPE_OBJECT_ARRAY:
                 def array = []
                 if(parameterValue != null) {
-                    String childName = templateData.get(TYPE_OBJECT_CHILDNAME)
+                    String childName = templateData.get(TYPE_OBJECT_CHILDNAME);
                     if(!(templateData.get(PARAMETERS) instanceof List)) {
-                        throw new ParameterResolveException("${source} parameters must be list")
+                        throw new ParameterResolveException("${source} parameters must be list");
                     }
                     if(childName != null) {
                         parameterValue[childName]?.each { objectDataMap ->
