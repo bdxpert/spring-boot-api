@@ -225,40 +225,42 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_LONG_ARRAY:
-                parameterValues = getParameterValue(templateData, source, requestMap);
-                if(parameterValues != null) {
+                List<Long> parameterLongValues = (List<Long>)getParameterValue(templateData, source, requestMap);
 
-                    List array = new ArrayList();
-                    if(parameterValues instanceof List) {
-                        array = parameterValues;
+                if(parameterLongValues != null) {
+                    List<Long> longArray = new ArrayList<>();
+                    List<Long> longValuesArray = new ArrayList<>();
+
+                    if(parameterLongValues instanceof List) {
+                        longArray = parameterLongValues;
                     } else {
-                        array.addAll(parameterValues);
+                        longArray.addAll(parameterLongValues);
                     }
+
                     if(templateData.get(MAX_SIZE) != null) {
-                        int maxSize = templateData.get(MAX_SIZE) as int
-                        if(array.size() > maxSize) {
+                        int maxSize = toInt(templateData.get(MAX_SIZE).toString());
+                        if(longArray.size() > maxSize) {
                             throw new ParameterResolveException(source + " array size must be under " + maxSize);
                         }
                     }
 
-                    List valuesArray = new ArrayList();
-                    array.each {
-                        if(!isLong(it)) {
-                            throw new ParameterResolveException(source + " parameter should be numbers");
-                        }
-                        long parameterValue = it as long
-                        def maxValue = templateData.get(MAX_VALUE)
-                        def minValue = templateData.get(MIN_VALUE)
+                    for(Long it : longArray){
+                        if(!isLong(it)) throw new ParameterResolveException(source + " parameter should be numbers");
+                        Long parameterLong = toLong(it);
+                        Object maxValue = templateData.get(MAX_VALUE);
+                        Object minValue = templateData.get(MIN_VALUE);
 
-                        if(maxValue && isNotUnderMaxValue(parameterValue, maxValue as long)) {
+                        if(maxValue != null && isNotUnderMaxValue(parameterLongValues, maxValue)) {
                             throw new ParameterResolveException("all " + source + "'s must be under " + maxValue);
                         }
-                        if(minValue && isNotOverMinValue(parameterValue, minValue as long)) {
-                            throw new ParameterResolveException("all " + source + "'s must be over " + maxValue);
+                        if(minValue != null && isNotOverMinValue(parameterLongValues, minValue)) {
+                            throw new ParameterResolveException("all " + source + "'s must be over " + minValue);
                         }
-                        valuesArray += parameterValue
+
+                        longValuesArray.add(parameterLong);
                     }
-                    generatedRequestMap.put(key, valuesArray);
+
+                    generatedRequestMap.put(key, longValuesArray);
                 }
                 break;
 
