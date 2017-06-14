@@ -2,10 +2,10 @@ package info.doula;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.oracle.javafx.jmx.json.JSONException;
 import info.doula.exception.BadRequestException;
 import info.doula.response.Http;
 import info.doula.system.impl.AppConf;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
