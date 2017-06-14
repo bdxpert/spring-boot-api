@@ -41,9 +41,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
     public LinkedHashMap<String, Object> resolveRequestParameter(Map<String, Object> dataMap,  Map<String, Object> jsonTemplateMap)
         throws ParameterResolveException {
 
-        LinkedHashMap<String, Object> actualRequest = dataMap.get("request") != null?
+        LinkedHashMap<String, Object> actualRequest = !isNullObject(dataMap.get("request"))?
                 (LinkedHashMap<String, Object>) dataMap.get("request") : Maps.newLinkedHashMap();
-        Map requestTemplateMap = dataMap.get(REQUEST) != null? (Map)dataMap.get(REQUEST) : Collections.emptyMap();
+        Map requestTemplateMap = !isNullObject(dataMap.get(REQUEST))? (Map)dataMap.get(REQUEST) : Collections.emptyMap();
 
         if(requestTemplateMap.get(FAST_FORWARD).toString().equals("true")) return actualRequest;
 
@@ -76,7 +76,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                                             throws ParameterResolveException {
         String key = templateData.get(NAME).toString();
         String type = templateData.get(TYPE).toString();
-        String source = templateData.get(SOURCE) != null ? templateData.get(SOURCE).toString() : key;
+        String source = !isNullObject(templateData.get(SOURCE)) ? templateData.get(SOURCE).toString() : key;
 
         switch(type) {
             case TYPE_BOOLEAN:
