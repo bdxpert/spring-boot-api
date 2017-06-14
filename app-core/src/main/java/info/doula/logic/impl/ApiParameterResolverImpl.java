@@ -672,14 +672,14 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_STRING_ARRAY:
-                List array = new ArrayList();
+                List<String> strArray = new ArrayList<>();
                 if(parameterValue != null) {
                     if(parameterValue instanceof List) {
-                        parameterValue.each {
-                            array += it as String
+                        for(Object it : (List)parameterValue){
+                            strArray.add(it.toString());
                         }
                     } else {
-                        array.add(parameterValue.toString());
+                        strArray.add(parameterValue.toString());
                     }
                 }
                 generatedMap.put(key, array);
@@ -687,9 +687,10 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_OBJECT:
                 Map generatedObjectResponse = new HashMap();
-                templateData.get(PARAMETERS)?.each {
-                resolveResponseRecursively(parameterValue, it, generatedObjectResponse);
-            }
+                for(Object it : (List)templateData.get(PARAMETERS)){
+                    resolveResponseRecursively((Map)parameterValue, (Map)it, generatedObjectResponse);
+                }
+
             generatedMap.put(key, generatedObjectResponse);
             break;
 
