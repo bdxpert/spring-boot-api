@@ -325,23 +325,23 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_OBJECT_ARRAY:
-                Object objectArrayValue = getParameterValue(templateData, source, requestMap);
+                Map objectArrayValue = (Map)getParameterValue(templateData, source, requestMap);
 
                 if(objectArrayValue != null) {
-                    def array = []
-                    String childName = templateData.get(TYPE_OBJECT_CHILDNAME);
+                    List objArr = new ArrayList();
+                    String childName = templateData.get(TYPE_OBJECT_CHILDNAME).toString();
                     if(!(templateData.get(PARAMETERS) instanceof List)) {
                         throw new ParameterResolveException(source + " parameters must be list");
                     }
                     if(childName != null) {
-                        objectArrayValue[childName]?.each { objectDataMap ->
-                                def generatedObjectResponse = [:]
-                            templateData.get(PARAMETERS)?.each { objectTemplateElement ->
-                                    resolveRequestRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse);
+                        for(Object objectDataMap : (List)objectArrayValue.get(childName)){
+                            Map generatedObjectResponse = new HashMap();
+                            for(Object objectTemplateElement : (List) templateData.get(PARAMETERS)){
+                                resolveRequestRecursively((Map)objectDataMap, (Map)objectTemplateElement, generatedObjectResponse, null);
                             }
-                            def childResponse = [:]
-                            childResponse[childName] = generatedObjectResponse;
-                            array += childResponse
+
+                            Map childResponse = new HashMap();
+                            objArr.add(childResponse);
                         }
                     } else {
                         parameterValue?.each { objectDataMap ->
