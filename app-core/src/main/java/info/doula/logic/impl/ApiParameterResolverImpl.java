@@ -315,8 +315,10 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     if(!(templateData.get(PARAMETERS) instanceof List)) {
                         throw new ParameterResolveException(source + " parameters must be list");
                     }
-                    templateData.get(PARAMETERS)?.each {
-                        resolveRequestRecursively(objectValue, it, generatedObjectMap);
+
+                    List parameters = (List)templateData.get(PARAMETERS);
+                    for(Object it : parameters){
+                        resolveRequestRecursively((Map)objectValue, (Map)it, generatedObjectMap, null);
                     }
                     generatedRequestMap.put(key, generatedObjectMap);
                 }
