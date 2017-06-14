@@ -347,7 +347,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         for(Object objectDataMap : (List)objectArrayValue){
                             Map generatedObjectResponse = new HashMap();
                             for(Object objectTemplateElement : (List)templateData.get(PARAMETERS)){
-                                resolveRequestRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse);
+                                resolveRequestRecursively((Map)objectDataMap, (Map)objectTemplateElement, generatedObjectResponse, null);
                             }
 
                             objArr.add(generatedObjectResponse);
