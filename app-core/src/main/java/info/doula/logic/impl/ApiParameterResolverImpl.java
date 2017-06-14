@@ -284,26 +284,27 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     }
 
                     List<String> stringValuesArray = new ArrayList<>();
-                    array.each {
-                        String value = it
+                    for(String st : stringArray){
                         String pattern = templateData.get(PATTERN).toString();
-                        if (pattern != null && value !=null && !value.isEmpty()) {
-                            if (!(value ==~ pattern)) {
-                                throw new ParameterResolveException("all ${source}'s must be follow \"${pattern}\"");
+                        if (pattern != null && st !=null && !st.isEmpty()) {
+                            if (!(st ==~ pattern)) {
+                                throw new ParameterResolveException("all " + source + "'s must be follow " + pattern);
                             }
                         }
 
-                        def maxLength = templateData.get(MAX_LENGTH)
-                        def minLength = templateData.get(MIN_LENGTH)
-                        if(maxLength && value?.length() > (maxLength as int)) {
-                            throw new ParameterResolveException("all ${source}'s length must be under ${maxLength}")
+                        Object maxLength = templateData.get(MAX_LENGTH);
+                        Object minLength = templateData.get(MIN_LENGTH);
+
+                        if(maxLength != null && st.length() > (toInt(maxLength.toString()))) {
+                            throw new ParameterResolveException("all "+ source +"'s length must be under " + maxLength);
                         }
-                        if(minLength && value?.length() < (minLength as int)) {
-                            throw new ParameterResolveException("all ${source}'s length must be over ${minLength}")
+                        if(minLength != null && st.length() < (toInt(minLength.toString()))) {
+                            throw new ParameterResolveException("all " + source + "'s length must be over " + minLength);
                         }
-                        valuesArray += value
+
+                        stringValuesArray.add(st);
+                        generatedRequestMap.put(key, stringValuesArray);
                     }
-                    generatedRequestMap.put(key, valuesArray);
                 }
                 break;
 
