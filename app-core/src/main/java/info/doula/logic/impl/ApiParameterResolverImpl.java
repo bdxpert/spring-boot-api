@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static info.doula.entity.JsonAttributes.*;
 import static info.doula.util.NumberUtils.*;
@@ -20,6 +22,7 @@ import static info.doula.util.ObjectUtils.isNullObject;
 @Component("apiParameterResolver")
 public class ApiParameterResolverImpl implements ApiParameterResolver {
 
+    private Pattern pattern;
 
     /**
      * Resolve request map
@@ -285,9 +288,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
                     List<String> stringValuesArray = new ArrayList<>();
                     for(String st : stringArray){
-                        String pattern = templateData.get(PATTERN).toString();
+                        pattern = Pattern.compile(templateData.get(PATTERN).toString());
                         if (pattern != null && st !=null && !st.isEmpty()) {
-                            if (!(st ==~ pattern)) {
+                            if (!pattern.matcher(st).matches()) {
                                 throw new ParameterResolveException("all " + source + "'s must be follow " + pattern);
                             }
                         }
@@ -502,9 +505,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * @param templateData
      */
     private void doValidatePattern(Object origin, Map templateData) throws ParameterResolveException {
-        String pattern = templateData.get(PATTERN);
+        pattern = Pattern.compile(templateData.get(PATTERN).toString());
         if (pattern != null && origin !=null && !origin.toString().isEmpty()) {
-            if (!((origin.toString()) ==~ pattern)) {
+            if (!pattern.matcher(origin.toString()).matches()) {
                 throw new ParameterResolveException(templateData.get(SOURCE) != null? "" :
                         templateData.get(NAME) + " must follow " + pattern);
             }
@@ -670,7 +673,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         longArray.add(toLong(parameterValue.toString()));
                     }
                 }
-                generatedMap.put(key, array);
+                generatedMap.put(key, longArray);
                 break;
 
             case TYPE_STRING_ARRAY:
@@ -684,7 +687,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         strArray.add(parameterValue.toString());
                     }
                 }
-                generatedMap.put(key, array);
+                generatedMap.put(key, strArray);
                 break;
 
             case TYPE_OBJECT:
