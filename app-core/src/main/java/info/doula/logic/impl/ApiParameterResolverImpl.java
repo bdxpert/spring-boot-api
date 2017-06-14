@@ -12,6 +12,7 @@ import java.util.*;
 
 import static info.doula.entity.JsonAttributes.*;
 import static info.doula.util.NumberUtils.*;
+import static info.doula.util.ObjectUtils.isNullObject;
 
 /**
  * Created by tasnim on 6/11/2017.
@@ -265,31 +266,27 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_STRING_ARRAY:
-                def parameterValues = getParameterValue(templateData, source, requestMap);
+                List<String> stringValues = (List<String>)getParameterValue(templateData, source, requestMap);
 
-                if(parameterValues != null) {
+                if(stringValues != null) {
 
-                    def array = []
+                    List<String> stringArray = new ArrayList<>();
 
-                    if((parameterValues instanceof List) || (parameterValues instanceof String[])) {
-                        for (String parameterValue : parameterValues) {
-                            array+=parameterValue
-                        }
-                    } else {
-                        array += parameterValues
+                    for (String str : stringValues) {
+                        stringArray.add(str);
                     }
 
                     if(templateData.get(MAX_SIZE) != null) {
-                        int maxSize = templateData.get(MAX_SIZE) as int
-                        if(array.size() > maxSize) {
-                            throw new ParameterResolveException("${source} array size must be under ${maxSize}")
+                        int maxSize = toInt(templateData.get(MAX_SIZE).toString());
+                        if(stringArray.size() > maxSize) {
+                            throw new ParameterResolveException(source + " array size must be under " + maxSize);
                         }
                     }
 
-                    def valuesArray = []
+                    List<String> stringValuesArray = new ArrayList<>();
                     array.each {
                         String value = it
-                        String pattern = templateData.get(PATTERN)
+                        String pattern = templateData.get(PATTERN).toString();
                         if (pattern != null && value !=null && !value.isEmpty()) {
                             if (!(value ==~ pattern)) {
                                 throw new ParameterResolveException("all ${source}'s must be follow \"${pattern}\"");
@@ -306,7 +303,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         }
                         valuesArray += value
                     }
-                    generatedRequestMap.put(key, valuesArray)
+                    generatedRequestMap.put(key, valuesArray);
                 }
                 break;
 
@@ -347,7 +344,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         parameterValue?.each { objectDataMap ->
                                 def generatedObjectResponse = [:]
                             templateData.get(PARAMETERS)?.each { objectTemplateElement ->
-                                    resolveRequestRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse)
+                                    resolveRequestRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse);
                             }
                             array += generatedObjectResponse;
                         }
@@ -415,13 +412,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * @return true if object is null, else false
      */
     private boolean isNull(Object object) {
-        if (object == null) {
-            return true;
-        } else if (object instanceof JSONObject && ((JSONObject) object).isNullObject()) {
-            return true;
-        } else {
-            return false;
-        }
+        return object == null || object instanceof JSONObject && isNullObject(object);
     }
 
     /**
