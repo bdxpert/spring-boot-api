@@ -611,11 +611,11 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_OPTION:
                 if(parameterValue != null) {
-                    Object values = templateData.get(OPTION);
+                    List values = (List)templateData.get(OPTION);
                     if(values == null) {
                         throw new ParameterResolveException(source + " options should not be null/blank");
                     }
-                    if(!values.any { it == parameterValue}) {
+                    if(values.stream().anyMatch(ti -> ti != parameterValue)){
                         throw new ParameterResolveException("set " + source + " from ${values.join(',')}");
                     }
                 }
@@ -632,14 +632,14 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_INT_ARRAY:
             case TYPE_INTEGER_ARRAY:
-                List array = new ArrayList();
+                List<Integer> array = new ArrayList<>();
                 if(parameterValue != null) {
                     if(parameterValue instanceof List) {
-                        parameterValue.each {
+                        for(Object it : (List)parameterValue){
                             if(!isInteger(it)) {
                                 throw new ParameterResolveException(source + " parameter should be numbers");
                             }
-                            array += it as int
+                            array.add(toInt(it.toString()));
                         }
                     } else {
                         if(!isInteger(parameterValue)) {
@@ -652,20 +652,20 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_LONG_ARRAY:
-                List array = new ArrayList();
+                List<Long> longArray = new ArrayList<>();
                 if(parameterValue != null) {
                     if(parameterValue instanceof List) {
-                        parameterValue.each {
+                        for(Object it : (List)parameterValue){
                             if(!isLong(it)) {
-                                throw new ParameterResolveException("${source} parameter should be numbers");
+                                throw new ParameterResolveException(source + " parameter should be numbers");
                             }
-                            array += it as long
+                            longArray.add(toLong(it.toString()));
                         }
                     } else {
                         if(!isLong(parameterValue)) {
-                            throw new ParameterResolveException("${source} parameter should be numbers");
+                            throw new ParameterResolveException(source + " parameter should be numbers");
                         }
-                        array.add(toLong(parameterValue.toString()));
+                        longArray.add(toLong(parameterValue.toString()));
                     }
                 }
                 generatedMap.put(key, array);
