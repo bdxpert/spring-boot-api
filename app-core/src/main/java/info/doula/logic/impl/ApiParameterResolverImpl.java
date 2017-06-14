@@ -98,9 +98,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     if(!isInteger(integerValue))
                         throw new ParameterResolveException(source + " " + PR_MST_INT);
                     int givenValue = toInt(integerValue.toString());
-                    Integer maxValue = templateData.get(MAX_VALUE) != null ?
+                    Integer maxValue = !isNullObject(templateData.get(MAX_VALUE)) ?
                             toInt(templateData.get(MAX_VALUE).toString())  : null;
-                    Integer minValue = templateData.get(MIN_VALUE) != null ?
+                    Integer minValue = !isNullObject(templateData.get(MIN_VALUE)) ?
                             toInt(templateData.get(MIN_VALUE).toString()) : null;
                     checkMaxMinValue(maxValue, minValue, source, givenValue);
                     generatedRequestMap.put(key, givenValue);
@@ -113,8 +113,8 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     if(!isLong(longValue))
                         throw new ParameterResolveException(source + " " + PR_MST_LNG);
                     long givenValue = toLong(longValue.toString());
-                    Long maxValue = templateData.get(MAX_VALUE) != null ? toLong(templateData.get(MAX_VALUE).toString()) : null;
-                    Long minValue = templateData.get(MIN_VALUE) != null ? toLong(templateData.get(MIN_VALUE).toString()) : null;
+                    Long maxValue = !isNullObject(templateData.get(MAX_VALUE))? toLong(templateData.get(MAX_VALUE).toString()) : null;
+                    Long minValue = !isNullObject(templateData.get(MIN_VALUE))? toLong(templateData.get(MIN_VALUE).toString()) : null;
                     checkMaxMinValue(maxValue, minValue, source, givenValue);
                     generatedRequestMap.put(key, givenValue);
                 }
@@ -127,8 +127,8 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         throw new ParameterResolveException(source + " " + PR_MST_DEC);
                     doValidatePattern(decimalValue, templateData);
                     BigDecimal givenValue = new BigDecimal(decimalValue.toString());
-                    BigDecimal maxValue = templateData.get(MAX_VALUE) != null ? new BigDecimal(templateData.get(MAX_VALUE).toString()) : null;
-                    BigDecimal minValue = templateData.get(MIN_VALUE) != null ? new BigDecimal(templateData.get(MIN_VALUE).toString()) : null;
+                    BigDecimal maxValue = !isNullObject(templateData.get(MAX_VALUE)) ? new BigDecimal(templateData.get(MAX_VALUE).toString()) : null;
+                    BigDecimal minValue = !isNullObject(templateData.get(MIN_VALUE)) ? new BigDecimal(templateData.get(MIN_VALUE).toString()) : null;
                     checkMaxMinValue(maxValue, minValue, source, givenValue);
                     generatedRequestMap.put(key, givenValue);
                 }
@@ -136,9 +136,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_OPTION:
                 Object optionValue = getParameterValue(templateData, source, requestMap);
-                if(isNull(optionValue)) {
+                if(isNullObject(optionValue)) {
                     List values = (List)templateData.get(OPTION);
-                    if(values != null)
+                    if(isNullObject(values))
                         throw new ParameterResolveException(source + " " + OPT_MST);
 
                     if(values.stream().anyMatch(ti -> ti != optionValue))
@@ -150,13 +150,13 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_INT_OPTION:
                 Object intOptionValue = getParameterValue(templateData, source, requestMap);
-                if(isNull(intOptionValue)) {
+                if(isNullObject(intOptionValue)) {
                     if(!isInteger(intOptionValue)) throw new ParameterResolveException(source + " " + PR_MST_INT);
 
                     int givenValue = toInt(intOptionValue.toString());
                     List<Integer> values = (List<Integer>)templateData.get(OPTION);
 
-                    if(isNull(values))
+                    if(isNullObject(values))
                         throw new ParameterResolveException(source + " " + OPT_MST);
                     if(values.stream().anyMatch(ti -> ti != givenValue))
                         throw new ParameterResolveException("set " + source + " from " + values);
@@ -166,7 +166,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_STRING:
                 String stringValue = getParameterValue(templateData, source, requestMap).toString();
-                if(stringValue != null) {
+                if(!isNullObject(stringValue)) {
                     doValidatePattern(stringValue, templateData);
                     checkMaxMinStringLength(templateData, source, stringValue);
                     generatedRequestMap.put(key, stringValue);
@@ -179,16 +179,16 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_INT_ARRAY:
             case TYPE_INTEGER_ARRAY:
-                List<Integer> parameterValues = (List<Integer>)getParameterValue(templateData, source, requestMap);
+                Object parameterValues = getParameterValue(templateData, source, requestMap);
 
                 if(parameterValues != null) {
                     List<Integer> array = new ArrayList<>();
                     List<Integer> valuesArray = new ArrayList<>();
 
                     if(parameterValues instanceof List)
-                        array = parameterValues;
+                        array = (List)parameterValues;
                     else
-                        array.addAll(parameterValues);
+                        array.add(toInt(parameterValues));
 
                     if(isNull(templateData.get(MAX_SIZE))) {
                         int maxSize = toInt(templateData.get(MAX_SIZE).toString());
@@ -202,9 +202,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         Object maxValue = templateData.get(MAX_VALUE);
                         Object minValue = templateData.get(MIN_VALUE);
 
-                        if(isNull(maxValue) && isNotUnderMaxValue(parameterValue, maxValue))
+                        if(!isNullObject(maxValue) && isNotUnderMaxValue(parameterValue, maxValue))
                             throw new ParameterResolveException("all " + source + "'s must be under " + maxValue);
-                        if(isNull(minValue) && isNotOverMinValue(parameterValue, minValue))
+                        if(!isNullObject(minValue) && isNotOverMinValue(parameterValue, minValue))
                             throw new ParameterResolveException("all " + source + "'s must be over " + minValue);
 
                         valuesArray.add(parameterValue);
@@ -214,18 +214,18 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                 break;
 
             case TYPE_LONG_ARRAY:
-                List<Long> parameterLongValues = (List<Long>)getParameterValue(templateData, source, requestMap);
+                Object parameterLongValues = getParameterValue(templateData, source, requestMap);
 
                 if(parameterLongValues != null) {
                     List<Long> longArray = new ArrayList<>();
                     List<Long> longValuesArray = new ArrayList<>();
 
                     if(parameterLongValues instanceof List)
-                        longArray = parameterLongValues;
+                        longArray = (List)parameterLongValues;
                     else
-                        longArray.addAll(parameterLongValues);
+                        longArray.add(toLong(parameterLongValues));
 
-                    if(templateData.get(MAX_SIZE) != null) {
+                    if(!isNullObject(templateData.get(MAX_SIZE))) {
                         int maxSize = toInt(templateData.get(MAX_SIZE).toString());
                         if(longArray.size() > maxSize)
                             throw new ParameterResolveException(source + " " + ARR_MST_UND + " " + maxSize);
@@ -237,9 +237,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                         Object maxValue = templateData.get(MAX_VALUE);
                         Object minValue = templateData.get(MIN_VALUE);
 
-                        if(isNull(maxValue) && isNotUnderMaxValue(parameterLongValues, maxValue))
+                        if(!isNullObject(maxValue) && isNotUnderMaxValue(parameterLongValues, maxValue))
                             throw new ParameterResolveException("all " + source + "'s must be under " + maxValue);
-                        if(isNull(minValue) && isNotOverMinValue(parameterLongValues, minValue))
+                        if(!isNullObject(minValue) && isNotOverMinValue(parameterLongValues, minValue))
                             throw new ParameterResolveException("all " + source + "'s must be over " + minValue);
 
                         longValuesArray.add(parameterLong);
@@ -254,9 +254,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
                 if(stringValues != null) {
                     List<String> stringArray = new ArrayList<>();
-
-                    for (String str : stringValues)
-                        stringArray.add(str);
+                    stringArray.addAll(stringValues);
 
                     if(templateData.get(MAX_SIZE) != null) {
                         int maxSize = toInt(templateData.get(MAX_SIZE).toString());
@@ -267,15 +265,15 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     List<String> stringValuesArray = new ArrayList<>();
                     for(String st : stringArray){
                         pattern = Pattern.compile(templateData.get(PATTERN).toString());
-                        if (pattern != null && st != null && !st.isEmpty() && !pattern.matcher(st).matches())
+                        if (!isNullObject(pattern) && !isNullObject(st) && !st.isEmpty() && !pattern.matcher(st).matches())
                             throw new ParameterResolveException("all " + source + "'s must be follow " + pattern);
 
                         Object maxLength = templateData.get(MAX_LENGTH);
                         Object minLength = templateData.get(MIN_LENGTH);
 
-                        if(maxLength != null && st.length() > (toInt(maxLength.toString())))
+                        if(!isNullObject(maxLength) && st.length() > (toInt(maxLength.toString())))
                             throw new ParameterResolveException("all "+ source +"'s length must be under " + maxLength);
-                        if(minLength != null && st.length() < (toInt(minLength.toString())))
+                        if(!isNullObject(minLength) && st.length() < (toInt(minLength.toString())))
                             throw new ParameterResolveException("all " + source + "'s length must be over " + minLength);
 
                         stringValuesArray.add(st);
@@ -286,7 +284,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_OBJECT:
                 Object objectValue = getParameterValue(templateData, source, requestMap);
-                if(isNull(objectValue)) {
+                if(!isNullObject(objectValue)) {
                     LinkedHashMap generatedObjectMap = new LinkedHashMap();
                     if(!(templateData.get(PARAMETERS) instanceof List))
                         throw new ParameterResolveException(source + " " + PR_MST_LST);
@@ -302,7 +300,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
             case TYPE_OBJECT_ARRAY:
                 Map objectArrayValue = (Map)getParameterValue(templateData, source, requestMap);
 
-                if(isNull(objectArrayValue)) {
+                if(!isNullObject(objectArrayValue)) {
                     List objArr = new ArrayList();
                     String childName = templateData.get(TYPE_OBJECT_CHILDNAME).toString();
                     if(!(templateData.get(PARAMETERS) instanceof List))
@@ -370,10 +368,10 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
         boolean isRequired = templateData.get(REQUIRED).toString().toLowerCase().equals("true");
         if(isRequired) {
-            if(isNull(parameterValue) || StringUtils.isBlank(parameterValue.toString()))
+            if(!isNullObject(parameterValue) || StringUtils.isBlank(parameterValue.toString()))
                 throw new ParameterResolveException(datasource + " " + PR_MST);
         } else {
-            if(isNull(parameterValue) || StringUtils.isBlank(parameterValue.toString()))
+            if(!isNullObject(parameterValue) || StringUtils.isBlank(parameterValue.toString()))
                 parameterValue = templateData.get(DEFAULT);
         }
         return parameterValue;
@@ -490,7 +488,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                                                             throws ParameterResolveException {
         LinkedHashMap<String, Object> actualResponse = !isNullObject(response) ?
                 (LinkedHashMap<String, Object>)response: Maps.newLinkedHashMap();
-        Map<String, Object> responseMap = jsonTemplateMap.get(RESPONSE) != null ?
+        Map<String, Object> responseMap = !isNullObject(jsonTemplateMap.get(RESPONSE)) ?
                 (Map<String, Object>)jsonTemplateMap.get(RESPONSE) : Collections.emptyMap();
 
         if(responseMap.get(FAST_FORWARD).toString().equals("true"))
@@ -498,7 +496,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
         LinkedHashMap<String, Object> generatedMap = new LinkedHashMap<>();
 
-        Map<String, Object> templateParameterMap = responseMap.get(PARAMETERS) != null ?
+        Map<String, Object> templateParameterMap = !isNullObject(responseMap.get(PARAMETERS)) ?
                 (Map<String, Object>)responseMap.get(PARAMETERS): Collections.emptyMap();
         if(!(templateParameterMap instanceof List)) {
             throw new ParameterResolveException("invalid response parameters configuration in json. " +
@@ -525,7 +523,8 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
         Map reslovedRequestMap = new HashMap();
         String key = templateData.get(NAME).toString();
         String type = templateData.get(TYPE).toString();
-        String source = templateData.get(SOURCE) != null ? templateData.get(SOURCE).toString() : key;
+        String source = !isNullObject(templateData.get(SOURCE)) ?
+                templateData.get(SOURCE).toString() : key;
         Object parameterValue =  actualDataMap.get(source);
 
         switch(type) {
@@ -662,18 +661,17 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
             case TYPE_OBJECT_ARRAY:
                 List<Object> objects = new ArrayList<>();
                 Map parameter = (Map) parameterValue;
-                if(parameter != null) {
+                if(!isNullObject(parameter)) {
                     String childName = templateData.get(TYPE_OBJECT_CHILDNAME).toString();
                     if(!(templateData.get(PARAMETERS) instanceof List)) {
                         throw new ParameterResolveException(source + " " + PR_MST_LST);
                     }
-                    if(childName != null) {
+                    if(!isNullObject(childName)) {
                         for(Object objectDataMap : (List)parameter.get(childName)){
                             Map generatedObjectesp = new HashMap();
 
-                            for(Object objectTemplateElement : (List)templateData.get(PARAMETERS)){
+                            for(Object objectTemplateElement : (List)templateData.get(PARAMETERS))
                                 resolveResponseRecursively((Map)objectDataMap, (Map)objectTemplateElement, generatedObjectesp);
-                            }
 
                             Map childResponse = new HashMap();
                             childResponse.put(childName, generatedObjectesp) ;
@@ -682,9 +680,8 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     } else {
                         for(Object objectDataMap : (List)parameterValue){
                             generatedObjectResponse = new HashMap();
-                            for(Object objectTemplateElement : (List)templateData.get(PARAMETERS)){
+                            for(Object objectTemplateElement : (List)templateData.get(PARAMETERS))
                                 resolveResponseRecursively((Map)objectDataMap, (Map)objectTemplateElement, generatedObjectResponse);
-                            }
 
                             objects.add(generatedObjectResponse);
                         }
