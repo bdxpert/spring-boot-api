@@ -30,7 +30,7 @@ public interface AppConstants {
     String ADDRESS = "Github";
     String SUCCESS_MESSAGE = "success";
     String FAILED_MESSAGE = "failed";
-    String SB_KEY = "ibcs-primax";
+    String SB_KEY = "doula-key";
 
     String TEMPLATE_LOADER_PATH = "classpath:templates";
     String VIEW_PREFIX = "/WEB-INF/views/";
@@ -52,5 +52,20 @@ public interface AppConstants {
     String ILL_DAT_PAR_ERR = "internal data parse error";
 
     String RESP_LOG_ERR = "response logging error";
+
+    String PR_MST_INT = "parameter should be integer";
+    String OPT_MST = "options should not be null/blank";
+    String PR_MST = "parameter should not be null/blank";
+    String PR_MST_DEC = "parameter should be decimal";
+    String PR_MST_LNG = "parameter should be long";
+    String PR_MST_NMBR = "parameter should be numbers";
+    String ARR_MST_UND = "array size must be under";
+    String LEN_MST_UND = "length must be under";
+    String LEN_MST_OV = "length must be over";
+    String MST_FLLW = "must follow";
+    String MST_UND = "must be under";
+    String MST_OV = "must be over";
+    String PR_MST_LST = "parameters must be list";
+    String UNKNOWN_TYPE = "unknown type";
 
 }
