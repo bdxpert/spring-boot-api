@@ -86,7 +86,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     if(booleanValue.toString().toLowerCase().equals("true")) {
                         value = true;
                     } else if (isInteger(booleanValue)) {
-                        value = Integer.parseInt(booleanValue.toString()) > 0;
+                        value = toInt(booleanValue.toString()) > 0;
                     }
                     generatedRequestMap.put(key, value);
                 }
@@ -101,9 +101,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                     }
                     int givenValue = toInt(integerValue.toString());
                     Integer maxValue = templateData.get(MAX_VALUE) != null ?
-                            Integer.parseInt(templateData.get(MAX_VALUE).toString())  : null;
+                            toInt(templateData.get(MAX_VALUE).toString())  : null;
                     Integer minValue = templateData.get(MIN_VALUE) != null ?
-                            Integer.parseInt(templateData.get(MIN_VALUE).toString()) : null;
+                            toInt(templateData.get(MIN_VALUE).toString()) : null;
 
                     checkMaxMinValue(maxValue, minValue, source, givenValue);
                     generatedRequestMap.put(key, givenValue);
