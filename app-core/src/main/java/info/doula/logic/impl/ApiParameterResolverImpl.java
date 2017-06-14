@@ -344,15 +344,16 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                             objArr.add(childResponse);
                         }
                     } else {
-                        parameterValue?.each { objectDataMap ->
-                                def generatedObjectResponse = [:]
-                            templateData.get(PARAMETERS)?.each { objectTemplateElement ->
-                                    resolveRequestRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse);
+                        for(Object objectDataMap : (List)objectArrayValue){
+                            Map generatedObjectResponse = new HashMap();
+                            for(Object objectTemplateElement : (List)templateData.get(PARAMETERS)){
+                                resolveRequestRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse);
                             }
-                            array += generatedObjectResponse;
+
+                            objArr.add(generatedObjectResponse);
                         }
                     }
-                    generatedRequestMap.put(key, array);
+                    generatedRequestMap.put(key, objArr);
                 }
 
                 // Source for the value of the parameter with type=clientid is X-ClientId header
