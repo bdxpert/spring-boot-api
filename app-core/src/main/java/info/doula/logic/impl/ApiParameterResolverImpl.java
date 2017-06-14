@@ -698,36 +698,36 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
 
             case TYPE_OBJECT_ARRAY:
                 List<Object> objects = new ArrayList<>();
-                if(parameterValue != null) {
+                Map parameter = (Map) parameterValue;
+                if(parameter != null) {
                     String childName = templateData.get(TYPE_OBJECT_CHILDNAME).toString();
                     if(!(templateData.get(PARAMETERS) instanceof List)) {
                         throw new ParameterResolveException(source + " parameters must be list");
                     }
                     if(childName != null) {
-                        for(Object p : parameterValue[childName])
-                        parameterValue[childName]?.each { objectDataMap ->
-                                def generatedObjectResponse = [:]
-                            templateData.get(PARAMETERS)?.each { objectTemplateElement ->
-                                    resolveResponseRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse)
+                        for(Object objectDataMap : (List)parameter.get(childName)){
+                            Map generatedObjectesp = new HashMap();
+
+                            for(Object objectTemplateElement : (List)templateData.get(PARAMETERS)){
+                                resolveResponseRecursively((Map)objectDataMap, (Map)objectTemplateElement, generatedObjectesp);
                             }
+
                             Map childResponse = new HashMap();
-                            childResponse.put(childName, generatedObjectResponse) ;
-                            array += childResponse;
+                            childResponse.put(childName, generatedObjectesp) ;
+                            objects.add(childResponse);
                         }
                     } else {
                         for(Object objectDataMap : (List)parameterValue){
-
-                        }
-                        parameterValue?.each { objectDataMap ->
-                                def generatedObjectResponse = [:]
-                            templateData.get(PARAMETERS)?.each { objectTemplateElement ->
-                                    resolveResponseRecursively(objectDataMap, objectTemplateElement, generatedObjectResponse)
+                            generatedObjectResponse = new HashMap();
+                            for(Object objectTemplateElement : (List)templateData.get(PARAMETERS)){
+                                resolveResponseRecursively((Map)objectDataMap, (Map)objectTemplateElement, generatedObjectResponse);
                             }
-                            array += generatedObjectResponse
+
+                            objects.add(generatedObjectResponse);
                         }
                     }
                 }
-                generatedMap.put(key, array);
+                generatedMap.put(key, objects);
                 break;
 
             default:
