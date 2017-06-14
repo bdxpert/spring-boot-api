@@ -15,7 +15,7 @@ import static info.doula.util.NumberUtils.*;
 import static info.doula.util.ObjectUtils.isNullObject;
 
 /**
- * Created by tasnim on 6/11/2017.
+ * Created by hossaindoula<hossaindoula@gmail.com> on 6/11/2017.
  */
 @Component("apiParameterResolver")
 public class ApiParameterResolverImpl implements ApiParameterResolver {
@@ -538,8 +538,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
             throw new ParameterResolveException("invalid response parameters configuration in json. " +
                     "response parameters should be list");
         }
-        templateParameterMap.each {
-            resolveResponseRecursively(actualResponse, it, generatedMap);
+
+        for(Object templateParameter : (List)templateParameterMap){
+            resolveResponseRecursively(actualResponse, (Map)templateParameter, generatedMap);
         }
 
         return generatedMap;
@@ -695,13 +696,14 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
             break;
 
             case TYPE_OBJECT_ARRAY:
-                def array = []
+                List<Object> objects = new ArrayList<>();
                 if(parameterValue != null) {
-                    String childName = templateData.get(TYPE_OBJECT_CHILDNAME);
+                    String childName = templateData.get(TYPE_OBJECT_CHILDNAME).toString();
                     if(!(templateData.get(PARAMETERS) instanceof List)) {
-                        throw new ParameterResolveException("${source} parameters must be list");
+                        throw new ParameterResolveException(source + " parameters must be list");
                     }
                     if(childName != null) {
+                        for(Object p : parameterValue[childName])
                         parameterValue[childName]?.each { objectDataMap ->
                                 def generatedObjectResponse = [:]
                             templateData.get(PARAMETERS)?.each { objectTemplateElement ->
@@ -712,6 +714,9 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
                             array += childResponse;
                         }
                     } else {
+                        for(Object objectDataMap : (List)parameterValue){
+
+                        }
                         parameterValue?.each { objectDataMap ->
                                 def generatedObjectResponse = [:]
                             templateData.get(PARAMETERS)?.each { objectTemplateElement ->
