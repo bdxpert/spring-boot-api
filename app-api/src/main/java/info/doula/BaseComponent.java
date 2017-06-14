@@ -17,6 +17,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static info.doula.util.ObjectUtils.isNullObject;
+
 /**
  * Created by hossaindoula<hossain.doula@itconquest.com> on 2017-04-24.
  */
@@ -56,11 +58,13 @@ public abstract class BaseComponent {
         // Check content-type and get request map
         if(contentType.contains(Http.JSON_MIME)) {
             BufferedReader reader = servletRequest.getReader();
-            String body = "";
+            String body;
             String tmpStr;
+            StringBuilder bodyBuilder = new StringBuilder();
             while ((tmpStr = reader.readLine()) != null) {
-                body += tmpStr;
+                bodyBuilder.append(tmpStr);
             }
+            body = bodyBuilder.toString();
             try {
                 Gson gson = new Gson();
                 String requestBody = gson.toJson(body);
@@ -101,17 +105,17 @@ public abstract class BaseComponent {
             return true;
 
         } else if(method.equals("POST")) {
-            if(contentType != null  || contentType.contains(Http.FORM_URL_ENCODED) ||
+            if(!isNullObject(contentType) || contentType.contains(Http.FORM_URL_ENCODED) ||
                     contentType.contains(Http.JSON_CONTENT)) {
                 return true;
             }
         } else if(method.equals("PUT")) {
-            if(contentType != null  || contentType.contains(Http.FORM_URL_ENCODED) ||
+            if(!isNullObject(contentType) || contentType.contains(Http.FORM_URL_ENCODED) ||
                     contentType.contains(Http.JSON_CONTENT)) {
                 return true;
             }
         } else if(method.equals("PATCH")) {
-            if(contentType != null  || contentType.contains(Http.FORM_URL_ENCODED) ||
+            if(!isNullObject(contentType) || contentType.contains(Http.FORM_URL_ENCODED) ||
                     contentType.contains(Http.JSON_CONTENT)) {
                 return true;
             }

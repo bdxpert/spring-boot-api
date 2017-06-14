@@ -1,9 +1,11 @@
 package info.doula.exception;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * Created by hossaindoula<hossain.doula@itconquest.com> on 2017-04-19.
  */
-public class BadGatewayException extends Exception {
+public class BadGatewayException extends ApiException {
 
     /**
      * @param message
@@ -25,5 +27,9 @@ public class BadGatewayException extends Exception {
      */
     public BadGatewayException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public HttpStatus getServiceStatus(){
+        return HttpStatus.BAD_GATEWAY;
     }
 }

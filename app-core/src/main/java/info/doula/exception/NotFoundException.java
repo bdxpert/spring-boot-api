@@ -1,9 +1,11 @@
 package info.doula.exception;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * Created by hossaindoula<hossain.doula@itconquest.com> on 2017-04-19.
  */
-public class NotFoundException extends Exception {
+public class NotFoundException extends ApiException {
 
     /**
      * @param message
@@ -26,4 +28,10 @@ public class NotFoundException extends Exception {
     public NotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    @Override
+    HttpStatus getServiceStatus() {
+        return HttpStatus.NOT_FOUND;
+    }
+
 }

@@ -1,9 +1,11 @@
 package info.doula.exception;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * Created by hossaindoula<hossain.doula@itconquest.com> on 2017-04-19.
  */
-public class SystemException extends Exception {
+public class SystemException extends ApiException {
 
     private boolean needToAlert = true;
 
@@ -35,6 +37,10 @@ public class SystemException extends Exception {
 
     public void setNeedToAlert(boolean needToAlert) {
         this.needToAlert = needToAlert;
+    }
+
+    public HttpStatus getServiceStatus(){
+        return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
 }

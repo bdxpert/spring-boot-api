@@ -1,9 +1,11 @@
 package info.doula.exception;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * Created by hossaindoula<hossain.doula@itconquest.com> on 2017-04-19.
  */
-public class ServiceConditionException extends RuntimeException {
+public class ServiceConditionException extends ApiException {
 
     private boolean needToAlert = false;
 
@@ -35,6 +37,11 @@ public class ServiceConditionException extends RuntimeException {
 
     public void setNeedToAlert(boolean needToAlert) {
         this.needToAlert = needToAlert;
+    }
+
+
+    public HttpStatus getServiceStatus(){
+        return HttpStatus.SERVICE_UNAVAILABLE;
     }
 
 }

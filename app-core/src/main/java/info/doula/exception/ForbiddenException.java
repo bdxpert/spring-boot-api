@@ -1,9 +1,11 @@
 package info.doula.exception;
 
+import org.springframework.http.HttpStatus;
+
 /**
  * Created by hossaindoula<hossain.doula@itconquest.com> on 2017-04-19.
  */
-public class ForbiddenException extends Exception {
+public class ForbiddenException extends ApiException {
 
     /**
      * @param message
@@ -25,5 +27,9 @@ public class ForbiddenException extends Exception {
      */
     public ForbiddenException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public HttpStatus getServiceStatus(){
+        return HttpStatus.FORBIDDEN;
     }
 }
