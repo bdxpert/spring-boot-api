@@ -7,8 +7,8 @@ import java.util.HashMap;
  * This is the SingletonClass to fetch/make AppConfReader
  */
 public class AppConf {
-    static String defaultFilePath = "resources/app.properties";
-    static String defaultMessageFilePath = "resources/messages.properties";
+    static String defaultFilePath = "ConfigResources/app.properties";
+    static String defaultMessageFilePath = "ConfigResources/app-msg.properties";
     static long defaultTimeoutMillisecond = 600000L;
     static HashMap<String, AppConfReader> confReaders = new HashMap<>();
 
