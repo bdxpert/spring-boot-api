@@ -67,5 +67,6 @@ public interface AppConstants {
     String MST_OV = "must be over";
     String PR_MST_LST = "parameters must be list";
     String UNKNOWN_TYPE = "unknown type";
+    String APP_PREFIX = "app";
 
 }

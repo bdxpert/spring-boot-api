@@ -2,18 +2,21 @@ package info.doula.system.impl;
 
 import java.util.HashMap;
 
-/*
+import static info.doula.util.AppConstants.APP_PREFIX;
+import static info.doula.util.AppConstants.SEPARATOR;
+
+/**
  * AppConf
  * This is the SingletonClass to fetch/make AppConfReader
+ * @author hossaindoula <hossaindoula@gmail.com>
  */
 public class AppConf {
     static String defaultFilePath = "ConfigResources/app.properties";
-    static String defaultMessageFilePath = "ConfigResources/app-msg.properties";
+    static String defaultMessageFilePath = "ConfigResources/"+ APP_PREFIX + SEPARATOR + "msg.properties";
     static long defaultTimeoutMillisecond = 600000L;
     static HashMap<String, AppConfReader> confReaders = new HashMap<>();
 
-    private AppConf() {
-    }
+    private AppConf() {}
 
     /**
      * Gets instance of AppConfReader for defaultFilePath
