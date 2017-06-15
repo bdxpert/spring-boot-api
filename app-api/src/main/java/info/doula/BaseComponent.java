@@ -51,7 +51,6 @@ public abstract class BaseComponent {
      */
     protected Map<String,Object> readRequestFromServlet(HttpServletRequest servletRequest)
             throws BadRequestException, IOException {
-
         String contentType = servletRequest.getContentType();
         Map<String,Object> requestMap = new HashMap<>();
         if(logEnabled) logger.info(servletRequest.getRequestURI() + " content-type : " + contentType);
@@ -64,6 +63,7 @@ public abstract class BaseComponent {
             while ((tmpStr = reader.readLine()) != null) {
                 bodyBuilder.append(tmpStr);
             }
+
             body = bodyBuilder.toString();
             try {
                 Gson gson = new Gson();

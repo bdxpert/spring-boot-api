@@ -10,7 +10,7 @@ public class AppConf {
     static String defaultFilePath = "resources/app.properties";
     static String defaultMessageFilePath = "resources/messages.properties";
     static long defaultTimeoutMillisecond = 600000L;
-    static HashMap<String, AppConfReader> confReaders = new HashMap<String, AppConfReader>();
+    static HashMap<String, AppConfReader> confReaders = new HashMap<>();
 
     private AppConf() {
     }
