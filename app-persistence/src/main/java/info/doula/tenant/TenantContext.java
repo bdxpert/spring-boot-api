@@ -7,12 +7,7 @@ public class TenantContext {
 
     public static final String DEFAULT_TENANT = "test";
 
-    private static ThreadLocal<String> currentTenant = new ThreadLocal<String>() {
-        @Override
-        protected String initialValue() {
-            return DEFAULT_TENANT;
-        }
-    };
+    private static ThreadLocal<String> currentTenant = ThreadLocal.withInitial(() -> DEFAULT_TENANT);
 
     public static void setCurrentTenant(String tenant) {
         currentTenant.set(tenant);

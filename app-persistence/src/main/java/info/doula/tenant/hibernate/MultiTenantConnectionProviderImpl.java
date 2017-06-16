@@ -36,8 +36,7 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
         final Connection connection = getAnyConnection();
         try {
             connection.createStatement().execute( "USE " + tenantIdentifier );
-        }
-        catch ( SQLException e ) {
+        } catch ( SQLException e ) {
             throw new HibernateException(
                     "Could not alter JDBC connection to specified schema [" + tenantIdentifier + "]",
                     e
@@ -50,8 +49,7 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
     public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
         try {
             connection.createStatement().execute( "USE " + TenantContext.DEFAULT_TENANT );
-        }
-        catch ( SQLException e ) {
+        } catch ( SQLException e ) {
             throw new HibernateException(
                     "Could not alter JDBC connection to specified schema [" + tenantIdentifier + "]",
                     e
