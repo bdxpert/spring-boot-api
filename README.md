@@ -1,6 +1,6 @@
 # Spring Boot API Starter
 
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://spring.io/)
+[![N|Solid](https://spring.io/img/spring-by-pivotal.png)](https://spring.io/)
 
 Spring boot API starter is a gradle based, reusable, modularized, FrontEnd Controller pattern-established Project. It has the below features available:
 
