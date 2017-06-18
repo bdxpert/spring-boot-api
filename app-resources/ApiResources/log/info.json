@@ -1,0 +1,24 @@
+{
+  "request": {
+    "parameters": [
+      {
+        "name": "logQuote",
+        "type": "string",
+        "required": "true"
+      },
+      {
+        "name": "logSummary",
+        "type": "string",
+        "required": "true"
+      },
+      {
+        "name": "logUrl",
+        "type": "string",
+        "required": "false"
+      }
+    ]
+  },
+  "response": {
+    "fastforward": true
+  }
+}

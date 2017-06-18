@@ -483,6 +483,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * @param jsonTemplateMap
      * @return generatedMap
      */
+    @SuppressWarnings("unchecked")
     public LinkedHashMap<String, ?> resolveResponseParameter(Map<String, Object> response,
                                                              Map<String, Object> jsonTemplateMap)
                                                             throws ParameterResolveException {
@@ -517,6 +518,7 @@ public class ApiParameterResolverImpl implements ApiParameterResolver {
      * @param generatedMap
      * @throws ParameterResolveException
      */
+    @SuppressWarnings("unchecked")
     private void resolveResponseRecursively(Map actualDataMap, Map templateData, Map generatedMap)
                                             throws ParameterResolveException {
 
