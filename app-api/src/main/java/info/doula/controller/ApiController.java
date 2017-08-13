@@ -46,7 +46,7 @@ public class ApiController extends BaseComponent {
     @RequestMapping(value = "/api/{service}/{operation}/{version}",
                     produces = {Http.XML_MIME, Http.JSON_MIME},
                     method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> executeVersionApiWithPost(HttpServletRequest servletRequest,
                                                     @PathVariable("service") String serviceName,
                                                     @PathVariable("operation") String operationName,
@@ -57,7 +57,7 @@ public class ApiController extends BaseComponent {
             ServiceConditionException, IOException {
         Map<String, Object> response = execute(servletRequest, serviceName, operationName);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**
@@ -70,14 +70,14 @@ public class ApiController extends BaseComponent {
     @RequestMapping(value = "/api/{service}/{operation}",
                     produces = {Http.XML_MIME, Http.JSON_MIME},
                     method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> executePassThroughApiWithPost(HttpServletRequest servletRequest,
                                                     @PathVariable("service") String serviceName,
                                                     @PathVariable("operation") String operationName)
             throws BadRequestException, NotFoundException, SystemException, ServiceConditionException, IOException {
         Map<String, Object> response = execute(servletRequest, serviceName, operationName);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     /************************ POST *********************************/
 
