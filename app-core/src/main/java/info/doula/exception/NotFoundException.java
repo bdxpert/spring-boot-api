@@ -30,7 +30,7 @@ public class NotFoundException extends ApiException {
     }
 
     @Override
-    HttpStatus getServiceStatus() {
+    public HttpStatus getServiceStatus() {
         return HttpStatus.NOT_FOUND;
     }
 

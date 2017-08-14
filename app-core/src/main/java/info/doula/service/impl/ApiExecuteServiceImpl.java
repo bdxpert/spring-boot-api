@@ -18,6 +18,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static info.doula.util.AppConstants.*;
+
 
 /**
  * ApiExecuteService Used for executing all version and passThrough API's
@@ -66,7 +68,6 @@ class ApiExecuteServiceImpl implements ApiExecuteService {
 		String requestBody = dataMap.get("request").toString();
 
 		try {
-
 			//Check maintenance status
 			maintenanceChecker.checkApiMaintenanceStatus(dataMap.get("service").toString(),
 					dataMap.get("operation").toString(), dataMap.get("version").toString());
@@ -83,23 +84,23 @@ class ApiExecuteServiceImpl implements ApiExecuteService {
 			return result;
 		} catch (BadRequestException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "BadRequestException", logMsg, requestBody);
+					servletRequest, e, BAD_REQUEST, logMsg, requestBody);
 			throw e;
 		} catch (NotFoundException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "NotFoundException", logMsg, requestBody);
+					servletRequest, e, NOT_FOUND, logMsg, requestBody);
 			throw e;
 		} catch (ServiceConditionException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "ServiceConditionException", logMsg, requestBody);
+					servletRequest, e, SERVICE_UNAVAILABLE, logMsg, requestBody);
 			throw e;
 		} catch (SystemException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "ServiceConditionException", logMsg, requestBody);
+					servletRequest, e, SYSTEM_ERROR, logMsg, requestBody);
 			throw e;
 		} catch (Exception e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "ServiceConditionException", logMsg, requestBody);
+					servletRequest, e, SYSTEM_ERROR, logMsg, requestBody);
 			throw new SystemException("Fatal Exception");
 		}
 	}
@@ -142,23 +143,23 @@ class ApiExecuteServiceImpl implements ApiExecuteService {
 			return result;
 		} catch (BadRequestException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "BadRequestException", logMsg, requestBody);
+					servletRequest, e, BAD_REQUEST, logMsg, requestBody);
 			throw e;
 		} catch (NotFoundException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "NotFoundException", logMsg, requestBody);
+					servletRequest, e, NOT_FOUND, logMsg, requestBody);
 			throw e;
 		} catch (ServiceConditionException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "ServiceConditionException", logMsg, requestBody);
+					servletRequest, e, SERVICE_UNAVAILABLE, logMsg, requestBody);
 			throw e;
 		} catch (SystemException e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "SystemException", logMsg, requestBody);
+					servletRequest, e, SYSTEM_ERROR, logMsg, requestBody);
 			throw e;
 		} catch (Exception e) {
 			wrapExceptionThrow(time, accessTime,
-					servletRequest, e, "SystemException", logMsg, requestBody);
+					servletRequest, e, SYSTEM_ERROR, logMsg, requestBody);
 			throw new SystemException("Fatal Exception");
 		}
 	}

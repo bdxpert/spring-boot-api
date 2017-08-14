@@ -69,4 +69,16 @@ public interface AppConstants {
     String UNKNOWN_TYPE = "unknown type";
     String APP_PREFIX = "app";
 
+    String BAD_REQUEST = "BadRequestException";
+    String BAD_GATEWAY = "BadRequestException";
+    String FORBIDDEN = "ForbiddenException";
+    String METHOD_DENIED = "MethodDeniedException";
+    String NOT_ACCEPTABLE = "NotAcceptaleException";
+    String NOT_FOUND = "NotFoundException";
+    String UNSUPPORTED = "NotSupportException";
+    String PARAM_EXCEPTION = "ParameterResolveException";
+    String SERVICE_UNAVAILABLE = "ServiceConditionException";
+    String SYSTEM_ERROR = "SystemException";
+    String TIMEOUT_ERROR = "TimeoutException";
+
 }
