@@ -26,6 +26,15 @@ github:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://api.github.com/user
+google:
+client:
+    clientId: 76651853240-45iaiqdj8opblareobcf8f4ueeu982ki.apps.googleusercontent.com
+    clientSecret: 9f4cb3w9tydaTR7QgsZbBKV8
+    accessTokenUri: https://accounts.google.com/o/oauth2/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+    authScope: https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile
+    authorizationCode: authorization_code
+    preestablishedRedirectUrl: http://localhost:9000/googleLogin
 
 logging:
   level:
