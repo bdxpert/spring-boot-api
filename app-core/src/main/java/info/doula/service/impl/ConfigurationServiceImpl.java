@@ -1,5 +1,6 @@
 package info.doula.service.impl;
 
+import info.doula.exception.SystemException;
 import info.doula.service.ConfigurationService;
 import info.doula.system.ConfReader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 	 * Reload dynamic properties for updating service in & out status
 	 */
 	@Override
-	public void reloadServiceStatus() {
+	public void reloadServiceStatus() throws SystemException {
 		confReader.load();
 	}
 }

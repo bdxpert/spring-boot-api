@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import info.doula.exception.SystemException;
 import info.doula.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,11 +76,17 @@ public class PlatformController {
                                    @RequestParam("access_key") String accessKey) {
         Map<String, Object> response = new LinkedHashMap<>();
         if(platformControlledAccessKey.equals(accessKey)) {
-            configurationService.reloadServiceStatus();
-            String currentStatus = configurationService.isServiceIn() ? "in" : "out";
-            response.put("service", currentStatus);
-            model.addAttribute("responseData", response);
-            model.addAttribute("responseStatus", 200);
+            try {
+                configurationService.reloadServiceStatus();
+                String currentStatus = configurationService.isServiceIn() ? "in" : "out";
+                response.put("service", currentStatus);
+                model.addAttribute("responseData", response);
+                model.addAttribute("responseStatus", 200);
+            } catch (SystemException ex){
+                response.put("service", "error");
+                model.addAttribute("responseData", response);
+                model.addAttribute("responseStatus", 500);
+            }
         } else {
             response.put("error", "wrong_parameter");
             response.put("error_description", "invalid access_key");

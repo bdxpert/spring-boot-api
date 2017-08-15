@@ -64,7 +64,7 @@ public class MaintenanceCheckerImpl implements MaintenanceChecker {
 	 * @throws ServiceConditionException
 	 */
 	@Override
-	public void checkLinkIDMaint() {
+	public void checkLinkIDMaint() throws ServiceConditionException {
 		if (confReader.isTrue("linkdb.maintenance")) {
 			throw new ServiceConditionException("aff.lnk.maint");
 		}

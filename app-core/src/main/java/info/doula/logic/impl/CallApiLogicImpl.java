@@ -5,6 +5,7 @@ import info.doula.logic.CallApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ class CallApiLogicImpl implements CallApi {
 	}
 
 	@Override
-	public String requestPostMultipart(Map<String, ?> connectionMap) throws ServiceConditionException, IOException, Exception {
+	public String requestPostMultipart(Map<String, ?> connectionMap, File file, String mimeType) throws ServiceConditionException, IOException, Exception {
 		return null;
 	}
 }

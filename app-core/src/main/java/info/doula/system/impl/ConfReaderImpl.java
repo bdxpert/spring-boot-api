@@ -78,7 +78,7 @@ public class ConfReaderImpl implements ConfReader {
 	 */
 	@AppEngineMethod
 	@PostConstruct
-	public void load() {
+	public void load() throws SystemException {
 		try {
 			Properties temp = new Properties();
 			temp.load(new FileInputStream(configurationPath));

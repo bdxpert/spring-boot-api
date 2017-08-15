@@ -1,5 +1,7 @@
 package info.doula.system;
 
+import info.doula.exception.SystemException;
+
 /**
  * Read platform configuration properties
  *
@@ -33,6 +35,6 @@ public interface ConfReader {
 	/**
 	 * Load service properties
 	 */
-	void load();
+	void load() throws SystemException;
 
 }

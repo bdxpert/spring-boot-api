@@ -1,5 +1,7 @@
 package info.doula.service;
 
+import info.doula.exception.SystemException;
+
 /**
  * Configuration service to check service in or out
  *
@@ -25,6 +27,6 @@ public interface ConfigurationService {
 	/**
 	 * Reload dynamic properties for updating service in & out status
 	 */
-	public void reloadServiceStatus();
+	void reloadServiceStatus() throws SystemException;
 
 }
