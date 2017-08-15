@@ -20,12 +20,7 @@ import java.util.Locale;
 @SpringBootApplication
 @EnableScheduling
 @EnableCaching
-@PropertySource(name = "db.password", value = "fv.properties")
 public class ApplicationGateway {
-
-    static {
-        System.setProperty("jasypt.encryptor.password", "fvencryptpassword");
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(ApplicationGateway.class, args);
