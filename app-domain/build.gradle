@@ -17,6 +17,8 @@ repositories {
 }
 
 dependencies {
+
+    compile("org.projectlombok:lombok:1.16.16")
     // The production code uses Guava
     compile 'com.google.guava:guava:20.0'
 

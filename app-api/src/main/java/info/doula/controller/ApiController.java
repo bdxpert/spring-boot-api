@@ -183,7 +183,7 @@ public class ApiController extends BaseComponent {
      */
     @RequestMapping(value = "/api/{service}/{operation}/{version}",
                     produces = {Http.XML_MIME, Http.JSON_MIME},
-                    method = RequestMethod.PUT)
+                    method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> executeVersionApiWithPatch(HttpServletRequest servletRequest,
                                                     @PathVariable("service") String serviceName,
@@ -204,7 +204,7 @@ public class ApiController extends BaseComponent {
      */
     @RequestMapping(value = "/api/{service}/{operation}",
                     produces = {Http.XML_MIME, Http.JSON_MIME},
-                    method = RequestMethod.PUT)
+                    method = RequestMethod.PATCH)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> executePassThroughApiWithPatch(HttpServletRequest servletRequest,
                                                     @PathVariable("service") String serviceName,

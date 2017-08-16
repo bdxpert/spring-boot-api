@@ -28,7 +28,7 @@ class ApiRepositoryImpl  implements ApiRepository {
 
 	private static final Logger logger = LoggerFactory.getLogger(ApiRepositoryImpl.class);
 
-	@Value("${dynamic.properties.path:defaultValue}")
+	@Value("${api.repository.path:defaultValue}")
 	private String configurationPath;
 
 	LinkedHashMap<String, Object> allApiTemplates;

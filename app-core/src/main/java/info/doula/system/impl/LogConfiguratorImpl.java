@@ -6,6 +6,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.net.SMTPAppender;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,9 +24,13 @@ public class LogConfiguratorImpl {
 
 	private final Logger logger = (Logger) LoggerFactory.getLogger(this.getClass());
 
+	@Value("${logging.alert:defaultValue}")
 	private String sendAlert;
+	@Value("${logging.alert.to:defaultValue}")
 	private String to;
+	@Value("${logging.alert.from:defaultValue}")
 	private String from;
+	@Value("${logging.debug:defaultValue}")
 	private String debugMode;
 
 	public void setTo(String to) {
