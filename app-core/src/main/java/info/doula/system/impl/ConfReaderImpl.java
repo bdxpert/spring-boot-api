@@ -5,6 +5,7 @@ import info.doula.exception.SystemException;
 import info.doula.system.ConfReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ public class ConfReaderImpl implements ConfReader {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final Logger errorLogger = LoggerFactory.getLogger("ERROR");
 
-
+	@Value("${dynamic.properties.path:defaultValue}")
 	private String configurationPath;
 
 	private Properties prop = null;
