@@ -8,6 +8,7 @@ import info.doula.logic.ApiExecuteLogic;
 import info.doula.service.ApiExecuteService;
 import info.doula.system.ConfReader;
 import info.doula.system.MaintenanceChecker;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ import static info.doula.util.AppConstants.*;
  *
  */
 @Component("apiExecuteService")
+@Slf4j
 class ApiExecuteServiceImpl implements ApiExecuteService {
 
-	private Logger logger = LoggerFactory.getLogger(ApiExecuteServiceImpl.class);
 	private Logger executeLogger = LoggerFactory.getLogger("CALLAPI");
 	private Logger executeErrorLogger = LoggerFactory.getLogger("CALLAPI_ERROR");
 	private Logger errorLogger = LoggerFactory.getLogger("ERROR");
