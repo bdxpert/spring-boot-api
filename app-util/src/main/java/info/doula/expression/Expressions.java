@@ -3,13 +3,12 @@ package info.doula.expression;
 /**
  * @author hossaindoula <hossaindoula@gmail.com>
  */
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
-import static info.doula.util.ObjectUtils.isNullObject;
-
+import static info.doula.ObjectUtils.isNullObject;
 
 public class Expressions implements Expression {
     public List<Expression> exprs = new ArrayList<>();

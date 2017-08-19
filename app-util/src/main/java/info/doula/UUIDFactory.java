@@ -1,4 +1,4 @@
-package info.doula.util;
+package info.doula;
 
 import java.util.UUID;
 import java.util.regex.Pattern;

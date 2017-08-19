@@ -1,6 +1,6 @@
 package info.doula.expression;
 
-import static info.doula.util.ObjectUtils.isNullObject;
+import static info.doula.ObjectUtils.isNullObject;
 
 /**
  * StringExpression

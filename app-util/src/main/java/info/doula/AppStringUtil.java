@@ -1,4 +1,4 @@
-package info.doula.util;
+package info.doula;
 
 import org.apache.commons.lang3.StringUtils;
 

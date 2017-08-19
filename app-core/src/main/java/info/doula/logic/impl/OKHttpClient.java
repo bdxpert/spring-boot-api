@@ -1,10 +1,10 @@
 package info.doula.logic.impl;
 
 import com.google.gson.Gson;
+import info.doula.AppStringUtil;
 import info.doula.exception.ServiceConditionException;
 import info.doula.logic.CallApi;
 import info.doula.system.impl.AppConf;
-import info.doula.util.AppStringUtil;
 import okhttp3.*;
 import okio.BufferedSink;
 

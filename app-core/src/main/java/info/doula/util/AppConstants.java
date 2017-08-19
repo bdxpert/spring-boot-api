@@ -1,5 +1,7 @@
 package info.doula.util;
 
+import info.doula.DateUtils;
+
 import java.util.Date;
 
 /**

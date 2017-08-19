@@ -20,12 +20,10 @@ repositories {
 dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     compile project(':app-util')
-    compile project(':app-resources')
     compile 'com.google.guava:guava:21.0'
 
     compile group: 'org.json', name: 'json', version: '20160810'
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.3.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jersey', version:'1.3.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version:'1.3.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version:'1.3.0.RELEASE'
@@ -76,10 +74,8 @@ dependencies {
     compile(group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.1')
     compile(group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.28')
     compile(group: 'org.aspectj', name: 'aspectjrt', version: '1.6.10')
-    compile(group: 'org.apache.commons', name: 'commons-lang3', version:'3.4')
     compile(group: 'javax.servlet.jsp', name: 'jsp-api', version: '2.2.1-b03')
     compile(group: 'javax.servlet', name: 'jstl', version:'1.2')
-    compile(group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0')
     compile(group: 'com.squareup.okhttp3', name:'okhttp', version:'3.5.0')
     compile(group: 'com.google.code.gson', name: 'gson', version: '2.5')
 

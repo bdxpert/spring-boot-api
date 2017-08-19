@@ -17,7 +17,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import static info.doula.util.ObjectUtils.isNullObject;
+import static info.doula.ObjectUtils.isNullObject;
 
 /**
  * Created by hossaindoula<hossain.doula@itconquest.com> on 2017-04-24.

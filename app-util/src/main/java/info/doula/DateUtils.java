@@ -1,4 +1,4 @@
-package info.doula.util;
+package info.doula;
 
 import java.text.DateFormat;
 import java.text.ParseException;

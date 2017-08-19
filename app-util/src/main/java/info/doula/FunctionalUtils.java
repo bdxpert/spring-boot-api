@@ -1,4 +1,4 @@
-package info.doula.util;
+package info.doula;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

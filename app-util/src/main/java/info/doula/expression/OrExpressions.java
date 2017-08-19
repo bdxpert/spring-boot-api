@@ -1,8 +1,8 @@
 package info.doula.expression;
 
-import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
 
 /**
  * OrExpression

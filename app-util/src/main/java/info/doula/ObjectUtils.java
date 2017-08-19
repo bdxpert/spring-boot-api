@@ -1,4 +1,4 @@
-package info.doula.util;
+package info.doula;
 
 /**
  * Created by doula_itc on 2017-06-13.
