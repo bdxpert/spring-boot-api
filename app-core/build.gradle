@@ -20,6 +20,7 @@ repositories {
 dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     compile project(':app-util')
+    compile project(':app-resources')
     compile 'com.google.guava:guava:21.0'
 
     compile group: 'org.json', name: 'json', version: '20160810'
