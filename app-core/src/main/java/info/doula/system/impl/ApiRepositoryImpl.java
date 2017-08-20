@@ -89,18 +89,19 @@ class ApiRepositoryImpl  implements ApiRepository {
 		File apiDir = new File(configurationPath);
 		for(String serviceName : apiDir.list()){
 
-			File apiFileDir = new File(serviceName);
-			for(String apiFile : apiFileDir.list())
-			try {
-				String apiFileName = apiFile.toString().replaceFirst("\\.", "/");
-
+			File apiFileDir = new File(configurationPath.concat(File.separator).concat(serviceName));
+			for(String apiFile : apiFileDir.list()) {
 				try {
-					tempAPITemplateMap.put(serviceName + "/" + apiFileName, FileUtil.readText(apiFileName));
-				} catch(IOException ex){
+					String apiFileName = apiFile.toString().replaceFirst("\\.", "/");
 
+					try {
+						tempAPITemplateMap.put(serviceName + "/" + apiFileName, FileUtil.readText(apiFileName));
+					} catch (IOException ex) {
+
+					}
+				} catch (Exception ex) {
+					throw new SystemException("Api file loading error " + apiFile, ex);
 				}
-			} catch(Exception ex) {
-				throw new SystemException("Api file loading error " + apiFile, ex);
 			}
 		}
 
