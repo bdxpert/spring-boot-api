@@ -13,6 +13,7 @@ import info.doula.exception.BadRequestException;
 import info.doula.exception.SystemException;
 import info.doula.system.ApiRepository;
 import info.doula.FileUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +25,8 @@ import org.springframework.stereotype.Component;
  * @author hossaindoula<hossaindoula@gmail.com>
  */
 @Component("apiRepository")
+@Slf4j
 class ApiRepositoryImpl  implements ApiRepository {
-
-	private static final Logger logger = LoggerFactory.getLogger(ApiRepositoryImpl.class);
 
 	@Value("${api.repository.path:defaultValue}")
 	private String configurationPath;
@@ -92,12 +92,10 @@ class ApiRepositoryImpl  implements ApiRepository {
 			File apiFileDir = new File(configurationPath.concat(File.separator).concat(serviceName));
 			for(String apiFile : apiFileDir.list()) {
 				try {
-					String apiFileName = apiFile.toString().replaceFirst("\\.", "/");
-
 					try {
-						tempAPITemplateMap.put(serviceName + "/" + apiFileName, FileUtil.readText(apiFileName));
+						tempAPITemplateMap.put(serviceName + "/" + apiFile.toString(), FileUtil.readText(apiFile.toString()));
 					} catch (IOException ex) {
-
+					    log.error("cannot load request/response resource " + ex);
 					}
 				} catch (Exception ex) {
 					throw new SystemException("Api file loading error " + apiFile, ex);
@@ -108,7 +106,7 @@ class ApiRepositoryImpl  implements ApiRepository {
 		allApiTemplates = tempAPITemplateMap;
 		long endTime = System.currentTimeMillis();
 
-		logger.info("ApiRepository is loaded. it takes ", endTime - startTime);
+		log.info("ApiRepository is loaded. it takes ", endTime - startTime);
 	}
 
 	/**
