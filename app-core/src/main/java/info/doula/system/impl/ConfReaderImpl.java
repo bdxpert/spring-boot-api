@@ -67,14 +67,6 @@ public class ConfReaderImpl implements ConfReader {
 	}
 
 	/**
-	 * Set property configuration file path
-	 * @param configurationPath
-	 */
-	public void setConfigurationPath(String configurationPath) {
-		this.configurationPath = configurationPath;
-	}
-
-	/**
 	 * Loads the properties form the given path
 	 */
 	@AppEngineMethod
