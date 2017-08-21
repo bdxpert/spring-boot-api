@@ -91,9 +91,10 @@ class ApiRepositoryImpl  implements ApiRepository {
 
 			File apiFileDir = new File(configurationPath.concat(File.separator).concat(serviceName));
 			for(String apiFile : apiFileDir.list()) {
+				String ultimateDir = configurationPath.concat(File.separator).concat(serviceName);
 				try {
 					try {
-						tempAPITemplateMap.put(serviceName + "/" + apiFile.toString(), FileUtil.readText(apiFile.toString()));
+						tempAPITemplateMap.put(serviceName + "/" + apiFile.toString(), FileUtil.readText(ultimateDir.concat(File.separator).concat(apiFile).toString()));
 					} catch (IOException ex) {
 					    log.error("cannot load request/response resource " + ex);
 					}
